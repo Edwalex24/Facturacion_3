@@ -40,11 +40,12 @@ function processVentasMaquinas(fileData) {
   
   // Ajustar el rango para ignorar las primeras 10 filas
   const range = xlsx.utils.decode_range(sheet['!ref']);
-  range.s.r = 10; // Comenzar en la fila 11 (0-indexed)
+  range.s.r = 9; // Comenzar en la fila 11 (0-indexed)
   sheet['!ref'] = xlsx.utils.encode_range(range);
   
   // Convertir la hoja a un array de arrays (header:1)
-  const data = xlsx.utils.sheet_to_json(sheet, { header: 1, range: 10 });
+  const data = xlsx.utils.sheet_to_json(sheet, { header: 1 }); // Convertir hoja a JSON
+  console.log(data); // Verificar el resultado
 
   // Definir los nuevos encabezados
   const headers = [
@@ -84,18 +85,34 @@ function processVentasMaquinas(fileData) {
  */
 function processFacturacionSheet({ workbook, processedData1 }) {
   // Convertir el JSON a una hoja (sheet) de Excel
- 
-
-  const newSheet1 = xlsx.utils.json_to_sheet(processedData1);
-  
-  // Ejemplo: formatear la columna H (por ejemplo, para que se muestre como fecha en formato dd/mm/yyyy)
-  for (let i = 2; i <= processedData1.length + 1; i++) {
-    if (newSheet1[`H${i}`]) {
-      newSheet1[`H${i}`].z = 'dd/mm/yyyy';
+  const finalData = processedData1.slice(1);
+  const newSheet1 = xlsx.utils.json_to_sheet(finalData);
+ // Formatear columnas H, I, J y K (corresponden a:
+  // H: "Valor ventas netas", I: "Tarifa 12%", J: "Tarifa Fija", K: "Derechos de Explotación")
+  // Asumimos que la fila 1 es el encabezado, así que los datos empiezan en la fila 2.
+  const totalRows = finalData.length + 1;
+  for (let rowIndex = 2; rowIndex <= totalRows; rowIndex++) {
+    // Columna H
+    const cellH = newSheet1["H" + rowIndex];
+    if (cellH) {
+      cellH.z = '"$"#,##0';
     }
-    // Puedes añadir más formatos para otras columnas según lo necesites
+    // Columna I
+    const cellI = newSheet1["I" + rowIndex];
+    if (cellI) {
+      cellI.z = '"$"#,##0';
+    }
+    // Columna J
+    const cellJ = newSheet1["J" + rowIndex];
+    if (cellJ) {
+      cellJ.z = '"$"#,##0';
+    }
+    // Columna K
+    const cellK = newSheet1["K" + rowIndex];
+    if (cellK) {
+      cellK.z = '"$"#,##0';
+    }
   }
-  
   // Adjuntar la nueva hoja al libro con el nombre "Facturacion"
   xlsx.utils.book_append_sheet(workbook, newSheet1, 'Facturacion');
 }
