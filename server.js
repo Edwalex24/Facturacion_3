@@ -1,28 +1,46 @@
-// server.js
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const path = require('path');
+const http = require('http');
+const { Server } = require('socket.io');
+const saveJsonToFile = require('./utils/saveJson');
+const logger = require('./utils/logger'); // Asegúrate de tener el logger configurado
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
-// Middlewares
-app.use(fileUpload());
+app.use(fileUpload({ parseNested: true }));
 app.use(express.static('public'));
 
-// Página de inicio
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
-// Importar rutas modulares
+// Configuración de rutas
 const inventarioRoutes = require('./routes/inventarioRoutes');
 const facturacionRoutes = require('./routes/facturacionRoutes');
 
-// Asociar rutas
 app.use('/inventario', inventarioRoutes);
 app.use('/facturacion', facturacionRoutes);
 
-// Iniciar el servidor
-app.listen(3000, () => {
-  console.log('Servidor iniciado en http://localhost:3000');
+// WebSocket para monitoreo
+io.on('connection', (socket) => {
+  logger.info('Cliente conectado al visor.');
+
+  socket.on('disconnect', () => {
+    logger.info('Cliente desconectado del visor.');
+  });
+});
+
+// Función para emitir logs por WebSocket
+function sendLog(message) {
+  const timestamp = new Date().toISOString();
+  const fullMessage = `[${timestamp}] ${message}`;
+  io.emit('log', fullMessage);
+  logger.info(message); // También logueamos con Winston
+}
+
+module.exports = { sendLog };
+
+// Iniciar servidor
+server.listen(3000, () => {
+  logger.info('Servidor iniciado en http://localhost:3000');
 });

@@ -17,3 +17,10 @@ pre {
     padding: 10px;
     border: 1px solid #ddd;
 }
+.hint {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+}

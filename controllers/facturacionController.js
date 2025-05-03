@@ -1,105 +1,123 @@
-const fs = require('fs');
-const path = require('path');
+const ExcelJS = require('exceljs');
 const xlsx = require('xlsx');
-const excelService = require('../services/excelService');
+const path = require('path');
+const fs = require('fs');
+const { unmergeCells } = require('../utils/excelUtils');
+const {
+  generarResumenVentasPorLocalExcelJS,
+  agregarResumenInventarioExcelJS,
+  agregarHojaFacturacionExcelJS,
+  processInventario
+} = require('../services/excelProcessor');
 
-exports.uploadFinal = (req, res) => {
+exports.uploadFacturacion = async (req, res) => {
   try {
-    if (!req.files || !req.files.fileFacturacion) {
+    // Verificar si el archivo de facturación está presente
+    if (!req.files || !req.files.file) {
       return res.status(400).send('Por favor sube el archivo de facturación.');
     }
 
-    const fileFacturacion = req.files.fileFacturacion;
-    const fileBingo = req.files.fileBingo;
+    // Log para el archivo de facturación
+    console.log("📂 Archivo de facturación recibido:", req.files.file ? req.files.file.name : "Ninguno");
 
-    // Leer el archivo de facturación
-    const workbook1 = xlsx.read(fileFacturacion.data, { type: 'buffer' });
-    const sheetName1 = workbook1.SheetNames[0];
-    const sheet1 = workbook1.Sheets[sheetName1];
+    const fileData = req.files.file.data;
 
-    // Ajustar para ignorar filas 1 a 10 (inicia desde la fila 11)
-    const range1 = xlsx.utils.decode_range(sheet1['!ref']);
-    range1.s.r = 10; // En cero-index, esto ignora filas 1 a 10
-    sheet1['!ref'] = xlsx.utils.encode_range(range1);
-
-    // Obtener los datos como array (cada fila es un array de celdas)
-    const data1 = xlsx.utils.sheet_to_json(sheet1, { header: 1 });
-    console.log("Datos ajustados:", data1);
-
-    // Procesar datos según los encabezados definidos:
-    // - Serial: combinación de Columna A y B (índices 0 y 1)
-    // - Marca: Columna C (índice 2)
-    // - NUC: Columna D (índice 3)
-    // - Código de Apuesta: combinación de Columna E y F (índices 4 y 5)
-    // - Establecimiento: Columna G (índice 6)
-    // - Municipio: Columna H (índice 7)
-    // - Departamento: combinación de Columna I y J (índices 8 y 9)
-    // - Valor Ventas Netas: Columna K (índice 10)
-    // - Tarifa 12%: Columna L (índice 11)
-    // - Tarifa Fija: Columna M (índice 12)
-    // - Derechos de explotación: Columna N (índice 13)
-    // - Tipo tarifa: Columna O (índice 14)
-    // - Codigo de establecimiento: Columna P (índice 15)
-    const processedData1 = data1.map(row => {
-      const serial = `${row[0] || ''} ${row[1] || ''}`.trim();
-      const marca = row[2] || '';
-      const nuc = row[3] || '';
-      const codigoApuesta = `${row[4] || ''} ${row[5] || ''}`.trim();
-      const establecimiento = row[6] || '';
-      const municipio = row[7] || '';
-      const departamento = `${row[8] || ''} ${row[9] || ''}`.trim();
-      const ventasNetas = (typeof row[10] === 'undefined' ? '' : row[10]);
-      const tarifa12 = (typeof row[11] === 'undefined' ? '' : row[11]);
-      const tarifaFija = (typeof row[12] === 'undefined' ? '' : row[12]);
-      const derechosExplotacion = (typeof row[13] === 'undefined' ? '' : row[13]);
-      const tipoTarifa = row[14] || '';
-      const codigoEstablecimiento = row[15] || '';
-
-      return {
-        'Serial': serial,
-        'Marca': marca,
-        'NUC': nuc,
-        'Código de Apuesta': codigoApuesta,
-        'Establecimiento': establecimiento,
-        'Municipio': municipio,
-        'Departamento': departamento,
-        'Valor Ventas Netas': ventasNetas,
-        'Tarifa 12%': tarifa12,
-        'Tarifa Fija': tarifaFija,
-        'Derechos de explotación': derechosExplotacion,
-        'Tipo tarifa': tipoTarifa,
-        'Codigo de establecimiento': codigoEstablecimiento
-      };
-    });
-
-    // Procesar datos adicionales en el workbook a través de tu servicio (según lo necesites)
-    excelService.processFacturacionSheet({ workbook: workbook1, processedData1 });
-
-    // Eliminar la hoja original para mantener solo las hojas de datos procesados (si es el caso)
-    delete workbook1.Sheets[sheetName1];
-    workbook1.SheetNames = workbook1.SheetNames.filter(name => name !== sheetName1);
-
-    // Guardar el archivo de facturación procesado como .json
-    const tempDir = path.join(__dirname, '..', 'temp_data');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
+    // Leer archivo original con xlsx y obtener la hoja "elementosConectadosDeclaracion"
+    const originalWorkbook = xlsx.read(fileData, { type: 'buffer' });
+    const originalSheet = originalWorkbook.Sheets["elementosConectadosDeclaracion"];
+    if (!originalSheet) {
+      console.warn('⚠️ La hoja "elementosConectadosDeclaracion" no fue encontrada en el archivo de facturación.');
+      return res.status(400).send('La hoja "elementosConectadosDeclaracion" no fue encontrada.');
     }
-    const facturacionFileName = `facturacion_${Date.now()}.json`;
-    const facturacionFilePath = path.join(tempDir, facturacionFileName);
-    fs.writeFileSync(facturacionFilePath, JSON.stringify(processedData1, null, 2));
 
-    // Convertir el workbook actualizado a buffer para descarga (u otra operación)
-    const buffer = xlsx.write(workbook1, { type: 'buffer', bookType: 'xlsx' });
+    // Log para indicar que la hoja fue encontrada
+    console.log("✅ Hoja 'elementosConectadosDeclaracion' encontrada en el archivo de facturación.");
 
-    res.json({
-      file: buffer.toString('base64'),
-      message: 'Archivos procesados exitosamente.',
-      hasBingo: !!fileBingo,
-      facturacionFilePath: `/temp_data/${facturacionFileName}`
+    // Verificar si el archivo de inventario está presente
+    const inventarioFile = req.files.fileInventario;
+    if (!inventarioFile) {
+      console.warn('⚠️ No se recibió el archivo de inventario.');
+      return res.status(400).send('No se recibió el archivo de inventario.');
+    }
+
+    // Log para el archivo de inventario
+    console.log("📂 Archivo de inventario recibido:", inventarioFile ? inventarioFile.name : "Ninguno");
+
+    // Procesar el archivo de inventario
+    const inventarioData = processInventario(inventarioFile.data);
+    if (!inventarioData || inventarioData.length === 0) {
+      console.warn("⚠️ El archivo de inventario no contiene datos válidos.");
+      return res.status(400).send("El archivo de inventario no contiene datos válidos.");
+    }
+    console.log(`✅ Datos del archivo de inventario procesados: ${inventarioData.length} filas procesadas.`);
+
+    // Procesar los datos del archivo de facturación
+    unmergeCells(originalSheet);
+    let processedData1 = xlsx.utils.sheet_to_json(originalSheet);// Log para indicar que los datos del archivo de facturación fueron procesados
+    console.log("✅ Datos del archivo de facturación procesados:", processedData1.length, "filas procesadas.");
+    
+    // Continuar con la lógica existente...
+    processedData1 = processedData1.map(row => {
+      delete row["Locales concatenados Anexo"];
+      row["Locales concatenados Anexo"] = `${row["Codigo de establecimiento"] || ''} ${row["Establecimiento"] || ''}`.trim();
+      return row;
     });
-
-  } catch (error) {
-    console.error('Error en uploadFinal:', error);
-    res.status(500).send('Ocurrió un error interno al procesar los archivos.');
-  }
-};
+    
+    // Crear un nuevo workbook con ExcelJS
+    const workbook = new ExcelJS.Workbook();
+    
+    // Verificar si existe un archivo de bingo
+    let bingoBuffers = null;
+    if (req.files.fileBingo) {
+      const file = req.files.fileBingo;
+      const ext = path.extname(file.name).toLowerCase();
+    
+      if (['.xlsx', '.xls'].includes(ext)) {
+        bingoBuffers = file.data;
+        console.log("📂 Archivo de bingo recibido:", file.name);
+      } else {
+        console.warn(`⚠️ Archivo de bingo ignorado por extensión no válida: ${file.name}`);
+        return res.status(400).send("El archivo de bingo debe ser en formato Excel (.xlsx o .xls).");
+      }
+    } else {
+      console.log("📂 No se recibió ningún archivo de bingo.");
+    }
+    
+    // Agregar hoja principal de facturación
+    console.log("➕ Agregando hoja de facturación al workbook...");
+    if (!processedData1 || processedData1.length === 0) {
+      console.error("❌ Error: processedData1 está vacío o no es válido.");
+      return res.status(400).send("Los datos procesados de facturación no son válidos.");
+    }
+    
+    console.log("✅ Datos de facturación y bingo válidos. Llamando a agregarHojaFacturacionExcelJS...");
+    agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers);
+    console.log("✅ Hoja de facturación agregada exitosamente.");
+    
+    // Generar hoja de resumen de ventas por local
+    console.log("➕ Generando resumen de ventas por local...");
+    await generarResumenVentasPorLocalExcelJS(workbook, processedData1);
+    console.log("✅ Resumen de ventas generado exitosamente.");
+    
+    // Agregar resumen de inventario a hoja de resumen
+    const resumenSheet = workbook.getWorksheet('ResumenVentasPorLocal');
+    if (!resumenSheet) {
+      console.error('❌ No se encontró la hoja "ResumenVentasPorLocal".');
+      return res.status(500).send('No se encontró la hoja "ResumenVentasPorLocal".');
+    }
+    console.log("➕ Agregando resumen de inventario...");
+    agregarResumenInventarioExcelJS(resumenSheet, inventarioData);
+    console.log("✅ Resumen de inventario agregado exitosamente.");
+    
+    // Enviar archivo final como descarga
+    const buffer = await workbook.xlsx.writeBuffer();
+    console.log("📄 Buffer del archivo generado exitosamente. Enviando al cliente...");
+    res.setHeader('Content-Disposition', 'attachment; filename=Anexo_procesado.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+    
+    } catch (error) {
+      console.error('❌ Error procesando el archivo de facturación:', error);
+      res.status(500).send('Error interno al procesar el archivo.');
+    }
+    };

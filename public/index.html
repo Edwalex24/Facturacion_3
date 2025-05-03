@@ -57,14 +57,17 @@
         <input type="file" id="inventarioFileInput" name="fileInventario" required>
         <button type="button" id="uploadInventarioButton" onclick="uploadInventario()">Cargar Inventario</button>
         
-        <div id="facturacionFileInput">
-            <label for="fileInputFacturacion">Cargar Archivo de Facturación:</label>
-            <input type="file" id="fileInputFacturacion" name="fileFacturacion">
-        </div>
+        <div id="facturacionFileInput" style="display: none;">
+            <label for="facturacionFile">Anexo Facturación:</label>
+            <input type="file" id="facturacionFile" name="file" />
+            <small class="hint" id="facturacionHint">Este archivo debe ser el anexo con los datos de facturación.</small>
+          </div>
+          
         
-        <div id="bingoFileInputs">
-            <label for="fileInputBingo1">Cargar Archivo de Bingo:</label>
-            <input type="file" id="fileInputBingo1" name="fileBingo1">
+        <div id="bingoFileInputs" style="display: none;">
+            <label for="fileInputBingo">Cargar Archivo de Bingo:</label>
+            <input type="file" id="fileInputBingo" name="fileBingo">
+            <small class="hint" id="bingoHint">Este archivo debe ser el anexo con los datos de bingo.</small>
         </div>
         
         <button type="button" id="uploadFinalButton" onclick="uploadFinal()" style="display:none;">Cargar Archivos</button>
@@ -72,7 +75,7 @@
     <p id="statusMessage" aria-live="polite"></p>
     
     <!-- Botón de Reinicio -->
-    <button id="resetButton" onclick="resetForm()">Reiniciar</button>
+    <button id="resetButton" onclick="resetForm()" style="display:none;">Reiniciar</button>
 
     <script src="script.js"></script>
 </body>
