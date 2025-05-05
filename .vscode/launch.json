@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Iniciar servidor",
+        "skipFiles": ["<node_internals>/**"],
+        "program": "${workspaceFolder}/server.js", // Cambia "server.js" si tu archivo principal tiene otro nombre
+        "env": {
+          "NODE_ENV": "development" // Puedes configurar variables de entorno aquí
+        },
+        "runtimeArgs": [
+          "--inspect" // Habilita el modo de inspección para depuración
+        ],
+        "restart": true, // Reinicia automáticamente al realizar cambios
+        "console": "integratedTerminal" // Usa el terminal integrado de VS Code
+      }
+    ]
+  }

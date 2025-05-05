@@ -1,0 +1,34 @@
+[
+  [
+    "Detalle liquidación bingos"
+  ],
+  [],
+  [
+    "Contrato",
+    "Establecimiento",
+    "Cod establecimiento",
+    "Mes liquidación",
+    "Año liquidación",
+    "Ingresos",
+    "Premios",
+    "Tipo tarifa",
+    "Valor liquidación TV",
+    "Valor liquidación TF",
+    "Valor derechos de explotación",
+    "Valor gastos de administración"
+  ],
+  [
+    "C1832",
+    "BINGO BELLO",
+    "026",
+    3,
+    2025,
+    220175754,
+    135611781,
+    "Tarifa variable",
+    10147677,
+    55,
+    10147677,
+    101477
+  ]
+]
