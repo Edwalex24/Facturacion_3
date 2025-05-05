@@ -142,6 +142,7 @@
 [2025-05-03 17:31:40] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-03 17:32:30] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-03 17:33:42] [32minfo[39m: Servidor iniciado en http://localhost:3000
+<<<<<<< HEAD
 [2025-05-04 09:24:55] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-04 09:37:06] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-04 09:44:08] [32minfo[39m: Servidor iniciado en http://localhost:3000
@@ -177,3 +178,5 @@
 [2025-05-04 20:09:41] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-04 20:13:15] [32minfo[39m: Servidor iniciado en http://localhost:3000
 [2025-05-04 20:17:45] [32minfo[39m: Servidor iniciado en http://localhost:3000
+=======
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8

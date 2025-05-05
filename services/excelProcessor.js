@@ -3,6 +3,10 @@ const fs = require('fs');
 const os = require('os');
 const xlsx = require('xlsx');
 const { unmergeCells, fillEmptyCellsWithNA, removeEmptyColumns } = require('../utils/excelUtils');
+<<<<<<< HEAD
+=======
+const { encode_cell, decode_range, encode_range } = xlsx.utils;
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
 const ExcelJS = require('exceljs');
 
 // Función para guardar el archivo procesado en la carpeta de descargas
@@ -11,8 +15,11 @@ function saveProcessedFile(workbook, filename) {
   xlsx.writeFile(workbook, outputPath);
   return outputPath;
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
 function agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers = []) {
   if (!processedData1 || processedData1.length === 0) {
     console.log("❌ No hay datos para agregar a la hoja Facturación.");
@@ -26,7 +33,24 @@ function agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers = 
     workbook.removeWorksheet(existingSheet.id);
   }
 
+<<<<<<< HEAD
   console.log("🔍 Creando la hoja 'Facturación' con los datos proporcionados...");
+=======
+  const tmpDir = path.join(__dirname, 'tmp');
+  if (!fs.existsSync(tmpDir)) {
+    fs.mkdirSync(tmpDir);
+  }
+
+  // Guardar los datos procesados para depuración
+  const jsonPath = path.join(tmpDir, 'debug_processedData1.json');
+  fs.writeFileSync(jsonPath, JSON.stringify(processedData1, null, 2), 'utf8');
+  console.log(`✅ processedData1 guardado en: ${jsonPath}`);
+
+  console.log("🔍 Ejemplo de row en processedData1:", processedData1[0]);
+  console.log("🔑 Claves del primer row:", Object.keys(processedData1[0]));
+
+  // Crear la hoja de facturación
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   const sheet = workbook.addWorksheet('Facturación');
   sheet.columns = [
     { header: "Serial", key: "Serial", width: 31 },
@@ -63,9 +87,16 @@ function agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers = 
   processedData1.forEach((row) => {
     const rowData = {};
     headers.forEach(header => {
+<<<<<<< HEAD
       rowData[header] = row[header] || "N/A"; // Completar celdas vacías con "N/A"
     });
     rowData["Locales concatenados Anexo"] = `${row["Codigo de establecimiento"] || 'N/A'} ${row["Establecimiento"] || 'N/A'}`.trim();
+=======
+      rowData[header] = row[header] || '';
+    });
+    const concatenado = `${row["Codigo de establecimiento"] || ''} ${row["Establecimiento"] || ''}`.trim();
+    rowData["Locales concatenados Anexo"] = concatenado;
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
 
     const newRow = sheet.addRow(rowData);
     newRow.alignment = { horizontal: 'center', vertical: 'middle' };
@@ -81,6 +112,7 @@ function agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers = 
     });
   });
 
+<<<<<<< HEAD
   // Procesar archivos de bingo, si existen
   if (bingoBuffers && bingoBuffers.length > 0) {
     console.log("🧩 Insertando datos desde archivos de bingo...");
@@ -115,6 +147,68 @@ function agregarHojaFacturacionExcelJS(workbook, processedData1, bingoBuffers = 
 
   console.log("✅ Hoja 'Facturación' creada con éxito.");
 }
+=======
+  // Manejo del caso de archivos de bingo
+  if (!bingoBuffers || bingoBuffers.length === 0) {
+    console.log("📂 No se recibieron archivos de bingo. Finalizando sin procesar bingos.");
+    return;
+  }
+
+  console.log("🧩 Insertando datos desde archivos de bingo:", bingoBuffers.length);
+
+  // Procesar cada archivo de bingo
+  for (const buffer of bingoBuffers) {
+    try {
+      const workbookBingo = xlsx.read(buffer, { type: 'buffer' });
+      const firstSheetName = workbookBingo.SheetNames[0];
+      const worksheet = workbookBingo.Sheets[firstSheetName];
+      if (!worksheet) continue;
+
+      const raw = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: '' });
+      console.log("🔍 Vista previa cruda del archivo de bingo:", raw.slice(0, 5)); // Ver primeras filas
+
+      const bingoHeaders = raw[2]; // Fila 3
+      const rows = raw.slice(3); // Desde fila 4
+
+      const data = rows.map(row => {
+        const obj = {};
+        bingoHeaders.forEach((header, index) => {
+          obj[header] = row[index];
+        });
+        return obj;
+      });
+
+      const bingoJsonPath = path.join(tmpDir, `debug_bingo_${Date.now()}.json`);
+      fs.writeFileSync(bingoJsonPath, JSON.stringify(data, null, 2), 'utf8');
+      console.log(`📝 JSON del bingo guardado en: ${bingoJsonPath}`);
+
+      data.forEach(item => {
+        const newRow = sheet.addRow({});
+        const codigoEst = item['Cod establecimiento'] || '';
+        const establecimiento = item['Establecimiento'] || '';
+        const valorDerechos = item['Valor derechos de explotación'] || '';
+
+        newRow.getCell('Establecimiento').value = establecimiento;
+        newRow.getCell('Codigo de establecimiento').value = codigoEst;
+        newRow.getCell('Derechos de explotación').value = valorDerechos;
+        newRow.getCell('Locales concatenados Anexo').value = `${codigoEst} ${establecimiento}`.trim();
+
+        newRow.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        const derechosCell = newRow.getCell("Derechos de explotación");
+        if (typeof derechosCell.value === 'number') {
+          derechosCell.numFmt = '"$"#,##0';
+        }
+      });
+    } catch (error) {
+      console.error("❌ Error procesando archivo de bingo:", error.message);
+    }
+  }
+
+  console.log("✅ Hoja Facturación creada con exceljs.");
+}
+
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
 function processInventario(fileData) {
   // Leer el archivo Excel
   const workbook = xlsx.read(fileData, { type: 'buffer' });
@@ -132,6 +226,7 @@ function processInventario(fileData) {
   return processedData;
 }
 
+<<<<<<< HEAD
 async function generarResumenVentasPorLocalExcelJS(workbook) {
   const facturacionSheet = workbook.getWorksheet('Facturación');
   if (!facturacionSheet) {
@@ -153,10 +248,49 @@ async function generarResumenVentasPorLocalExcelJS(workbook) {
 
     const local = row.getCell('Locales concatenados Anexo').value;
     const valor = parseFloat(row.getCell('Derechos de explotación').value) || 0;
+=======
+async function generarResumenVentasPorLocalExcelJS(workbook, data) {
+  // 1. Crear nueva hoja
+  const resumenSheet = workbook.addWorksheet('ResumenVentasPorLocal');
+
+  // 2. Definir columnas (actualizar el nombre de la columna "Locales concatenados Anexo" a "Locales Anexo")
+  resumenSheet.columns = [
+    { header: 'Locales Anexo', key: 'local', width: 40 },  // Cambiar el nombre aquí
+    { header: 'Total a Pagar', key: 'total', width: 20 }
+  ];
+
+  // 3. Estilo de encabezados
+  const headerRow = resumenSheet.getRow(1);
+headerRow.eachCell({ includeEmpty: false }, (cell) => {
+  cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+  cell.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF0070C0' }
+  };
+  cell.alignment = { horizontal: 'center', vertical: 'middle' };
+});
+
+
+  // 4. Procesar data
+  const resumenMap = {};
+
+  data.forEach(row => {
+    //console.log(`Chequeando fila:`, row); // Ver qué contiene cada fila antes de usarla
+
+    const local = row['Locales concatenados Anexo'];  // Asegúrate de que esta columna exista en los datos
+    if (!local) {
+      //console.log(`¡Error! No se encuentra "Locales concatenados Anexo" para esta fila.`);
+    }
+
+    const valor = parseFloat(row['Derechos de explotación']) || 0;
+    const ajustado = valor * 1.01;
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
 
     if (!resumenMap[local]) {
       resumenMap[local] = 0;
     }
+<<<<<<< HEAD
     resumenMap[local] += valor * 1.01; // Ajuste del 1%
   });
 
@@ -228,6 +362,49 @@ async function generarResumenVentasPorLocalExcelJS(workbook) {
   console.log("✅ Hoja 'ResumenVentasPorLocal' creada con éxito.");
 }
 function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
+=======
+    resumenMap[local] += ajustado;
+  });
+
+  // 5. Insertar filas
+  let totalGeneral = 0;
+  for (const local of Object.keys(resumenMap).sort()) { // Ordenar ASC
+    const total = resumenMap[local];
+    resumenSheet.addRow({
+      local: local,
+      total: Math.round(total)
+    });
+    totalGeneral += total;
+  }
+    
+  // 6. Insertar total general
+  const totalRow = resumenSheet.addRow({
+    local: 'TOTAL GENERAL',
+    total: Math.round(totalGeneral)
+  });
+  
+  // Aplicar estilo similar a encabezado
+  totalRow.eachCell({ includeEmpty: false }, (cell) => {
+    cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF0070C0' } // Mismo azul oscuro que encabezado
+    };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+  });
+  
+
+  // 7. Formato moneda columna B
+  resumenSheet.getColumn('total').numFmt = '"$"#,##0;[Red]\-"$"#,##0';
+
+ //console.log('✅ ResumenVentasPorLocal generado.');
+}
+
+
+function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
+  // 1. Agrupar ocurrencias por local
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   const ocurrencias = {};
   for (const item of inventarioData) {
     const local = item['Locales Concatenados Inventario'];
@@ -236,10 +413,21 @@ function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
     }
   }
 
+<<<<<<< HEAD
   const localesOrdenados = Object.entries(ocurrencias).sort((a, b) => a[0].localeCompare(b[0]));
   const existingCols = worksheet.columnCount;
   const startCol = existingCols + 1;
 
+=======
+  // 2. Ordenar alfabéticamente
+  const localesOrdenados = Object.entries(ocurrencias).sort((a, b) => a[0].localeCompare(b[0]));
+
+  // 3. Determinar la columna siguiente libre
+  const existingCols = worksheet.columnCount;
+  const startCol = existingCols + 1;
+
+  // 4. Agregar encabezados con estilo
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   const encabezados = ['Locales Concatenados Inventario', 'Cantidad Inventario'];
   const headerRow = worksheet.getRow(1);
 
@@ -253,21 +441,29 @@ function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
       fgColor: { argb: 'FF4F81BD' }
     };
     cell.alignment = { horizontal: 'center' };
+<<<<<<< HEAD
     cell.border = {
       top: { style: 'thin' },
       left: { style: 'thin' },
       bottom: { style: 'thin' },
       right: { style: 'thin' }
     };
+=======
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   });
 
   headerRow.commit();
 
+<<<<<<< HEAD
+=======
+  // 5. Insertar datos
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   let rowIndex = 2;
   for (const [local, cantidad] of localesOrdenados) {
     const row = worksheet.getRow(rowIndex);
     row.getCell(startCol).value = local;
     row.getCell(startCol + 1).value = cantidad;
+<<<<<<< HEAD
 
     row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
       cell.border = {
@@ -283,18 +479,30 @@ function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
       }
     });
 
+=======
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
     row.commit();
     rowIndex++;
   }
 
+<<<<<<< HEAD
   const totalRow = worksheet.getRow(rowIndex);
   totalRow.getCell(startCol).value = 'Total Inventario';
   totalRow.getCell(startCol + 1).value = localesOrdenados.reduce((sum, [, cantidad]) => sum + cantidad, 0);
   totalRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+=======
+  // 6. Total al final
+  const totalRow = worksheet.getRow(rowIndex);
+  totalRow.getCell(startCol).value = 'Total Inventario';
+  totalRow.getCell(startCol + 1).value = localesOrdenados.reduce((sum, [, cantidad]) => sum + cantidad, 0);
+  //totalRow.font = { bold: true };
+  totalRow.eachCell({ includeEmpty: false }, (cell) => {
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
     cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
     cell.fill = {
       type: 'pattern',
       pattern: 'solid',
+<<<<<<< HEAD
       fgColor: { argb: 'FF4F81BD' }
     };
     cell.alignment = { horizontal: 'center' };
@@ -313,10 +521,21 @@ function agregarResumenInventarioExcelJS(worksheet, inventarioData) {
   });
 
   totalRow.commit();
+=======
+      fgColor: { argb: 'FF4F81BD' } // Mismo azul del encabezado
+    };
+    cell.alignment = { horizontal: 'center' };
+  });
+  
+  totalRow.commit();
+
+  // 7. Ajustar ancho columnas
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
   worksheet.getColumn(startCol).width = 40;
   worksheet.getColumn(startCol + 1).width = 20;
 }
 
+<<<<<<< HEAD
 /**
  * Procesa el archivo de anexo bingo y devuelve un JSON con los datos relevantes.
  * Filtra filas vacías y guarda un log JSON temporal para inspección.
@@ -446,3 +665,17 @@ module.exports = {
   processAnexoBingo,
   insertarDatosBingoEnFacturacion,
 };
+=======
+
+
+// Exportamos las funciones
+module.exports = {
+  // processFacturacionSheet,
+  processInventario,
+  saveProcessedFile,  // Exportamos la función saveProcessedFile
+  generarResumenVentasPorLocalExcelJS,
+  agregarResumenInventarioExcelJS,
+  agregarHojaFacturacionExcelJS
+};
+
+>>>>>>> b9d380a3d48620688e1c7c4f26974395eab07ee8
