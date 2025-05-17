@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Empresa - Liquidación Mensual de Casinos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        select {
+            background-color: white;
+        }
+
+        #nit-display {
+            padding: 10px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #666;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Liquidación Mensual de Casinos</h1>
+    <div class="container">
+        <div class="form-group">
+            <label for="empresa-select">Seleccione la Empresa:</label>
+            <select id="empresa-select" required>
+                <option value="">Seleccione una empresa...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>NIT:</label>
+            <div id="nit-display">-</div>
+        </div>
+
+        <div class="form-group">
+            <label for="contrato-select">Seleccione el Contrato:</label>
+            <select id="contrato-select" required disabled>
+                <option value="">Seleccione un contrato...</option>
+            </select>
+        </div>
+
+        <button id="continuar-btn" disabled>Continuar</button>
+    </div>
+
+    <script>
+        // Los datos de las empresas los moveremos a un archivo separado
+        const empresasData = {
+            empresas: [
+                {
+                    nombre: "ACERTAR EMPRESARIAL SAS",
+                    nit: "901.008.683-5",
+                    contratos: ["C1914", "C2029"]
+                },
+                {
+                    nombre: "ATLANTIS TECHNOLOGY SAS",
+                    nit: "901.586.999-5",
+                    contratos: ["C2018", "C2031"]
+                },
+                {
+                    nombre: "INVERSIONES GENESIS",
+                    nit: "901.282.863-7",
+                    contratos: ["C1792", "C1816"]
+                },
+                {
+                    nombre: "INVERSIONES GOLDEN BLUE",
+                    nit: "901.154.582-4",
+                    contratos: ["C1546"]
+                },
+                {
+                    nombre: "JUEGOS MONTE CARLO",
+                    nit: "901.280.521-4",
+                    contratos: ["C2042"]
+                },
+                {
+                    nombre: "KPITAL MET SAS",
+                    nit: "901.287.673-7",
+                    contratos: ["C1590", "C1694"]
+                },
+                {
+                    nombre: "LEGO",
+                    nit: "901.079.244-9",
+                    contratos: ["C1535", "C1571"]
+                },
+                {
+                    nombre: "LOS ALPES PLAY",
+                    nit: "901.508.602-4",
+                    contratos: ["C1800", "C1831"]
+                },
+                {
+                    nombre: "ODESSA SAS",
+                    nit: "901.011.779-4",
+                    contratos: ["C2099"]
+                },
+                {
+                    nombre: "PUERTO BELEN SAS",
+                    nit: "900.996.338-2",
+                    contratos: ["C1566", "C1653"]
+                },
+                {
+                    nombre: "PLAY CITY COLOMBIA SAS",
+                    nit: "901.014.972-3",
+                    contratos: ["C2044", "C1829"]
+                },
+                {
+                    nombre: "SALGADO & AUDITORES",
+                    nit: "900.741.619-2",
+                    contratos: ["C1797", "C1832"]
+                },
+                {
+                    nombre: "SILVER TECH CO SAS",
+                    nit: "901.510.914-3",
+                    contratos: ["C1824", "C1868"]
+                },
+                {
+                    nombre: "STAR GAMES SAS",
+                    nit: "901.297.092-0",
+                    contratos: ["C1730", "C1770"]
+                },
+                {
+                    nombre: "JUEGOS TEXAS SAS",
+                    nit: "901.144.481-6",
+                    contratos: ["C1709"]
+                },
+                {
+                    nombre: "TEXAS GROUP SAS",
+                    nit: "901.502.218-1",
+                    contratos: ["C1819"]
+                },
+                {
+                    nombre: "GRUPO JERP SAS",
+                    nit: "901.502.216-7",
+                    contratos: ["C1954", "C1976"]
+                },
+                {
+                    nombre: "WORLD FANTASTIC SAS",
+                    nit: "901.263.738-3",
+                    contratos: ["C1867", "C2151"]
+                },
+                {
+                    nombre: "DIESEL SERVICE",
+                    nit: "901.314.439-6",
+                    contratos: ["C1807", "C1966"]
+                },
+                {
+                    nombre: "INFRATECNOLOGIA SAS",
+                    nit: "901.535.556-8",
+                    contratos: ["C1904", "C1920"]
+                },
+                {
+                    nombre: "TERRA TECNOLOGY SAS",
+                    nit: "901.535.653-4",
+                    contratos: ["C1987"]
+                }
+            ]
+        };
+
+        // Elementos del DOM
+        const empresaSelect = document.getElementById('empresa-select');
+        const nitDisplay = document.getElementById('nit-display');
+        const contratoSelect = document.getElementById('contrato-select');
+        const continuarBtn = document.getElementById('continuar-btn');
+
+        // Llenar el select con las empresas
+        empresasData.empresas.forEach(empresa => {
+            const option = document.createElement('option');
+            option.value = empresa.nombre;
+            option.textContent = empresa.nombre;
+            empresaSelect.appendChild(option);
+        });
+
+        // Manejar cambio de empresa seleccionada
+        empresaSelect.addEventListener('change', function() {
+            const empresaSeleccionada = empresasData.empresas.find(e => e.nombre === this.value);
+            
+            if (empresaSeleccionada) {
+                // Mostrar NIT
+                nitDisplay.textContent = empresaSeleccionada.nit;
+                
+                // Habilitar y llenar el select de contratos
+                contratoSelect.disabled = false;
+                contratoSelect.innerHTML = '<option value="">Seleccione un contrato...</option>';
+                
+                // Agregar cada contrato como opción
+                empresaSeleccionada.contratos.forEach(contrato => {
+                    const option = document.createElement('option');
+                    option.value = contrato;
+                    option.textContent = contrato;
+                    contratoSelect.appendChild(option);
+                });
+
+                // Resetear el botón continuar
+                continuarBtn.disabled = true;
+            } else {
+                nitDisplay.textContent = '-';
+                contratoSelect.innerHTML = '<option value="">Seleccione un contrato...</option>';
+                contratoSelect.disabled = true;
+                continuarBtn.disabled = true;
+            }
+        });
+
+        // Manejar cambio de contrato seleccionado
+        contratoSelect.addEventListener('change', function() {
+            continuarBtn.disabled = !this.value;
+        });
+
+        // Manejar click en botón continuar
+        continuarBtn.addEventListener('click', function() {
+            const empresaSeleccionada = empresasData.empresas.find(e => e.nombre === empresaSelect.value);
+            
+            // Guardar la selección en sessionStorage
+            const seleccion = {
+                empresa: empresaSeleccionada.nombre,
+                nit: empresaSeleccionada.nit,
+                contratos: [contratoSelect.value] // Ahora solo guardamos un contrato
+            };
+            sessionStorage.setItem('empresaSeleccionada', JSON.stringify(seleccion));
+
+            // Redirigir a la página principal
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html> 

@@ -19,11 +19,13 @@ app.use(express.urlencoded({ extended: true })); // Middleware para datos codifi
 // Configuración de rutas
 const inventarioRoutes = require('./routes/inventarioRoutes');
 const facturacionRoutes = require('./routes/facturacionRoutes');
-const pdfRoutes = require('./routes/pdfRoutes'); // Nueva ruta
+const pdfRoutes = require('./routes/pdfRoutes');
+const verificacionRoutes = require('./routes/verificacionRoutes'); // Nueva ruta de verificación
 
 app.use('/inventario', inventarioRoutes);
 app.use('/facturacion', facturacionRoutes);
 app.use('/api/pdf', pdfRoutes);
+app.use('/api', verificacionRoutes); // Agregar las rutas de verificación
 
 // WebSocket para monitoreo
 io.on('connection', (socket) => {

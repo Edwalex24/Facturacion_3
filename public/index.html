@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,30 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 20px;
+        }
+        .info-panel {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: left;
+        }
+        .info-panel h2 {
+            color: #0056b3;
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .info-panel p {
+            margin: 5px 0;
+            color: #495057;
+        }
+        .periodo-info {
+            background-color: #e7f5ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
         }
         form {
             max-width: 400px;
@@ -33,6 +57,13 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
+        }
+        button.secondary {
+            background-color: #6c757d;
+        }
+        button:hover {
+            opacity: 0.9;
         }
         button:disabled {
             background-color: #ccc;
@@ -48,10 +79,30 @@
         #resetButton {
             display: none;
         }
+        .warning {
+            color: #dc3545;
+            font-weight: bold;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <h1>Liquidación Mensual de Casinos</h1>
+
+    <!-- Panel de información de empresa y período -->
+    <div class="info-panel">
+        <h2>Información de Facturación</h2>
+        <div id="empresa-info">
+            <p><strong>Empresa:</strong> <span id="nombre-empresa">-</span></p>
+            <p><strong>NIT:</strong> <span id="nit-empresa">-</span></p>
+            <p><strong>Contrato:</strong> <span id="contrato-seleccionado">-</span></p>
+        </div>
+        <div class="periodo-info">
+            <p><strong>Período de Facturación:</strong> <span id="periodo-facturacion">-</span></p>
+        </div>
+        <button type="button" class="secondary" onclick="volverASeleccion()">Cambiar Selección</button>
+    </div>
+
     <form id="uploadForm" enctype="multipart/form-data">
         <label for="inventarioFileInput">Cargar Archivo de Inventario:</label>
         <input type="file" id="inventarioFileInput" name="fileInventario" required>
@@ -61,8 +112,7 @@
             <label for="facturacionFile">Anexo Facturación:</label>
             <input type="file" id="facturacionFile" name="file" />
             <small class="hint" id="facturacionHint">Este archivo debe ser el anexo con los datos de facturación.</small>
-          </div>
-          
+        </div>
         
         <div id="bingoFileInputs" style="display: none;">
             <label for="fileInputBingo">Cargar Archivo de Bingo:</label>
@@ -76,6 +126,61 @@
     
     <!-- Botón de Reinicio -->
     <button id="resetButton" onclick="resetForm()" style="display:none;">Reiniciar</button>
+
+    <script>
+        // Función para obtener el nombre del mes anterior
+        function obtenerMesAnterior() {
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const fecha = new Date();
+            fecha.setMonth(fecha.getMonth() - 1);
+            return meses[fecha.getMonth()];
+        }
+
+        // Función para volver a la página de selección
+        function volverASeleccion() {
+            window.location.href = 'seleccion-empresa.html';
+        }
+
+        // Cargar la información de la empresa al iniciar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            const empresaData = JSON.parse(sessionStorage.getItem('empresaSeleccionada'));
+            
+            if (!empresaData) {
+                window.location.href = 'seleccion-empresa.html';
+                return;
+            }
+
+            // Mostrar la información de la empresa
+            document.getElementById('nombre-empresa').textContent = empresaData.empresa;
+            document.getElementById('nit-empresa').textContent = empresaData.nit;
+            document.getElementById('contrato-seleccionado').textContent = empresaData.contratos[0];
+            document.getElementById('periodo-facturacion').textContent = obtenerMesAnterior() + ' ' + new Date().getFullYear();
+
+            // Verificar si ya se ha facturado este contrato en este período
+            verificarFacturacionPrevia(empresaData.contratos[0]);
+        });
+
+        // Función para verificar si ya se ha facturado este contrato en este período
+        async function verificarFacturacionPrevia(contrato) {
+            try {
+                const response = await fetch(`/api/verificar-facturacion?contrato=${contrato}&periodo=${obtenerMesAnterior()}`);
+                const data = await response.json();
+                
+                if (data.yaFacturado) {
+                    const warning = document.createElement('p');
+                    warning.className = 'warning';
+                    warning.textContent = '¡ADVERTENCIA! Este contrato ya ha sido facturado para este período.';
+                    document.querySelector('.info-panel').appendChild(warning);
+                    
+                    // Deshabilitar el formulario
+                    document.getElementById('uploadForm').style.opacity = '0.5';
+                    document.getElementById('uploadForm').style.pointerEvents = 'none';
+                }
+            } catch (error) {
+                console.error('Error al verificar facturación previa:', error);
+            }
+        }
+    </script>
 
     <script src="script.js"></script>
 </body>
