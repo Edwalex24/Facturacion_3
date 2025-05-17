@@ -6,3 +6,4 @@ const analisisInventarioController = require('../controllers/analisisInventarioC
 router.post('/upload', analisisInventarioController.uploadInventario);
 
 module.exports = router;
+

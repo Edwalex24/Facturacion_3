@@ -6,7 +6,6 @@ const uploadFinalButton = document.getElementById('uploadFinalButton');
 const statusMessage = document.getElementById('statusMessage');
 const resetButton = document.getElementById('resetButton');
 
-
 // NUEVOS ELEMENTOS: pistas de ayuda
 const facturacionHint = document.getElementById('facturacionHint');
 const bingoHint = document.getElementById('bingoHint');
@@ -75,8 +74,7 @@ document.getElementById('facturacionFile').addEventListener('change', function (
   } else {
     bingoFileInputs.style.display = 'none';
   }
-});
-// Función para manejar la carga final y validación de archivos
+});// Función para manejar la carga final y validación de archivos
 function uploadFinal() {
   const inventarioFile = document.getElementById('inventarioFileInput').files[0];
   const facturacionFile = document.getElementById('facturacionFile').files[0];
@@ -131,12 +129,60 @@ function uploadFinal() {
       document.body.removeChild(a);
 
       showStatusMessage('✅ Archivo descargado con éxito.', 'success');
+
+      // Preguntar al usuario si desea generar los PDFs
+      askForPDFGeneration();
     })
     .catch(error => {
       console.error('Error al procesar la solicitud:', error);
       showStatusMessage('Hubo un error al cargar los archivos. Intenta nuevamente.', 'error');
     });
 }
+
+// NUEVA FUNCIÓN: Preguntar al usuario si desea generar PDFs
+function askForPDFGeneration() {
+  const userResponse = confirm('¿Deseas también generar los PDFs de este procesamiento?');
+  
+  if (userResponse) {
+    generatePDFs();
+  } else {
+    showStatusMessage('Decidiste no generar los PDFs.', 'info');
+  }
+}
+function generatePDFs() {
+  fetch('http://localhost:3000/api/pdf/generarInformesZIP', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      salas: [ /* Aquí los datos de las salas */ ],
+    }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al generar los PDFs');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'Informes_salas.zip';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      showStatusMessage('✅ PDFs generados y descargados con éxito.', 'success');
+    })
+    .catch(error => {
+      console.error('Error al generar los PDFs:', error);
+      showStatusMessage('Hubo un error al generar los PDFs. Intenta nuevamente.', 'error');
+    });
+}
+
 // Función para mostrar mensajes de estado (exitoso o de error)
 function showStatusMessage(message, type = 'error') {
   const statusMessage = document.getElementById('statusMessage');

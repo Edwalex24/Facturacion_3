@@ -1,0 +1,1113 @@
+{
+  "salas": [
+    {
+      "nombreSala": "CACIQUE GRAN CASINO",
+      "municipio": "BOGOTÁ Distrito Capital",
+      "departamento": "BOGOTA",
+      "maquinas": [
+        {
+          "serial": "2461642",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1501252812",
+          "ventasNetas": 4016656,
+          "tarifa12": 481999,
+          "derechosExplotacion": 481999
+        },
+        {
+          "serial": "W2258416",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1500733014",
+          "ventasNetas": -2231060,
+          "tarifa12": -267727,
+          "derechosExplotacion": -267727
+        },
+        {
+          "serial": "290512",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1001268132",
+          "ventasNetas": 1563000,
+          "tarifa12": 187560,
+          "derechosExplotacion": 187560
+        },
+        {
+          "serial": "5016664",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1000245902",
+          "ventasNetas": 2123360,
+          "tarifa12": 254803,
+          "derechosExplotacion": 254803
+        },
+        {
+          "serial": "5018386",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1500819975",
+          "ventasNetas": -13795,
+          "tarifa12": -1655,
+          "derechosExplotacion": -1655
+        },
+        {
+          "serial": "5054962",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500819680",
+          "ventasNetas": 2068215,
+          "tarifa12": 248186,
+          "derechosExplotacion": 248186
+        },
+        {
+          "serial": "5054963",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500819671",
+          "ventasNetas": 324590,
+          "tarifa12": 38951,
+          "derechosExplotacion": 38951
+        },
+        {
+          "serial": "565921",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1500072294",
+          "ventasNetas": 543500,
+          "tarifa12": 65220,
+          "derechosExplotacion": 65220
+        },
+        {
+          "serial": "732035",
+          "marca": "Novomatic",
+          "nuc": "1501280156",
+          "ventasNetas": 476540,
+          "tarifa12": 57185,
+          "derechosExplotacion": 57185
+        },
+        {
+          "serial": "757797",
+          "marca": "Novomatic",
+          "nuc": "1501280147",
+          "ventasNetas": 208480,
+          "tarifa12": 25018,
+          "derechosExplotacion": 25018
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/01",
+          "marca": "Zuum",
+          "nuc": "1500820085",
+          "ventasNetas": 138100,
+          "tarifa12": 16572,
+          "derechosExplotacion": 16572
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/02",
+          "marca": "Zuum",
+          "nuc": "1500820076",
+          "ventasNetas": 174100,
+          "tarifa12": 20892,
+          "derechosExplotacion": 20892
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/03",
+          "marca": "Zuum",
+          "nuc": "1500820067",
+          "ventasNetas": 205800,
+          "tarifa12": 24696,
+          "derechosExplotacion": 24696
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/04",
+          "marca": "Zuum",
+          "nuc": "1500820058",
+          "ventasNetas": -494800,
+          "tarifa12": -59376,
+          "derechosExplotacion": -59376
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/05",
+          "marca": "Zuum",
+          "nuc": "1500820049",
+          "ventasNetas": -1431900,
+          "tarifa12": -171828,
+          "derechosExplotacion": -171828
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/06",
+          "marca": "Zuum",
+          "nuc": "1500820030",
+          "ventasNetas": 45600,
+          "tarifa12": 5472,
+          "derechosExplotacion": 5472
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/07",
+          "marca": "Zuum",
+          "nuc": "1500820021",
+          "ventasNetas": -178000,
+          "tarifa12": -21360,
+          "derechosExplotacion": -21360
+        },
+        {
+          "serial": "CR-08-RD-100-015-111328/08",
+          "marca": "Zuum",
+          "nuc": "1500820012",
+          "ventasNetas": 1498700,
+          "tarifa12": 179844,
+          "derechosExplotacion": 179844
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/01",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819662",
+          "ventasNetas": 1100900,
+          "tarifa12": 132108,
+          "derechosExplotacion": 132108
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/02",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819653",
+          "ventasNetas": -319400,
+          "tarifa12": -38328,
+          "derechosExplotacion": -38328
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/03",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819644",
+          "ventasNetas": -96800,
+          "tarifa12": -11616,
+          "derechosExplotacion": -11616
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/04",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819635",
+          "ventasNetas": 142800,
+          "tarifa12": 17136,
+          "derechosExplotacion": 17136
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/05",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819224",
+          "ventasNetas": -243700,
+          "tarifa12": -29244,
+          "derechosExplotacion": -29244
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/06",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819215",
+          "ventasNetas": 420800,
+          "tarifa12": 50496,
+          "derechosExplotacion": 50496
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/07",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819206",
+          "ventasNetas": -1469500,
+          "tarifa12": -176340,
+          "derechosExplotacion": -176340
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/08",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819199",
+          "ventasNetas": -2535500,
+          "tarifa12": -304260,
+          "derechosExplotacion": -304260
+        },
+        {
+          "serial": "GR-09-RD-100-015-061315/09",
+          "marca": "ZUUM (INNOVATIVE GAMING SYSTEMS)",
+          "nuc": "1500819180",
+          "ventasNetas": -257300,
+          "tarifa12": -30876,
+          "derechosExplotacion": -30876
+        },
+        {
+          "serial": "PXT0607.0002448",
+          "marca": "Unidesa ",
+          "nuc": "1002056234",
+          "ventasNetas": -737070,
+          "tarifa12": -88448,
+          "derechosExplotacion": -88448
+        },
+        {
+          "serial": "PXT0607.0002459",
+          "marca": "Unidesa ",
+          "nuc": "1002095277",
+          "ventasNetas": 4800,
+          "tarifa12": 576,
+          "derechosExplotacion": 576
+        },
+        {
+          "serial": "V040842842",
+          "marca": "Bally",
+          "nuc": "1001294310",
+          "ventasNetas": -217260,
+          "tarifa12": -26071,
+          "derechosExplotacion": -26071
+        },
+        {
+          "serial": "V040842864",
+          "marca": "Bally",
+          "nuc": "1001517952",
+          "ventasNetas": 819075,
+          "tarifa12": 98289,
+          "derechosExplotacion": 98289
+        },
+        {
+          "serial": "V040842939",
+          "marca": "Bally",
+          "nuc": "1001174144",
+          "ventasNetas": -1205190,
+          "tarifa12": -144623,
+          "derechosExplotacion": -144623
+        },
+        {
+          "serial": "V040842953",
+          "marca": "Bally",
+          "nuc": "1000741909",
+          "ventasNetas": 2044020,
+          "tarifa12": 245282,
+          "derechosExplotacion": 245282
+        },
+        {
+          "serial": "V040842979",
+          "marca": "Bally",
+          "nuc": "1001331229",
+          "ventasNetas": 5391155,
+          "tarifa12": 646939,
+          "derechosExplotacion": 646939
+        },
+        {
+          "serial": "V050956591",
+          "marca": "Bally",
+          "nuc": "1000611111",
+          "ventasNetas": 5738375,
+          "tarifa12": 688605,
+          "derechosExplotacion": 688605
+        },
+        {
+          "serial": "W2054375",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1001002438",
+          "ventasNetas": 1089547,
+          "tarifa12": 130746,
+          "derechosExplotacion": 130746
+        },
+        {
+          "serial": "W2054376",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1000869180",
+          "ventasNetas": 459130,
+          "tarifa12": 55096,
+          "derechosExplotacion": 55096
+        },
+        {
+          "serial": "W2054385",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1001328740",
+          "ventasNetas": 2712830,
+          "tarifa12": 325540,
+          "derechosExplotacion": 325540
+        },
+        {
+          "serial": "W2054386",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1000209488",
+          "ventasNetas": 1668410,
+          "tarifa12": 200209,
+          "derechosExplotacion": 200209
+        },
+        {
+          "serial": "W2217307",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1500733005",
+          "ventasNetas": 3007240,
+          "tarifa12": 360869,
+          "derechosExplotacion": 360869
+        },
+        {
+          "serial": "2499135",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1501280138",
+          "ventasNetas": 1219562,
+          "tarifa12": 146347,
+          "derechosExplotacion": 146347
+        }
+      ]
+    },
+    {
+      "nombreSala": "CASINO IMPERIOS",
+      "municipio": "MEDELLÍN",
+      "departamento": "ANTIOQUIA",
+      "maquinas": [
+        {
+          "serial": "031-2523",
+          "marca": "PMV",
+          "nuc": "1500453977",
+          "ventasNetas": 2729660,
+          "tarifa12": 327559,
+          "derechosExplotacion": 327559
+        },
+        {
+          "serial": "XAR131535",
+          "marca": "Ainsworth",
+          "nuc": "1500631426",
+          "ventasNetas": 984710,
+          "tarifa12": 118165,
+          "derechosExplotacion": 118165
+        },
+        {
+          "serial": "04035547",
+          "marca": "Interactive Game Trading",
+          "nuc": "1500879668",
+          "ventasNetas": 2789760,
+          "tarifa12": 334771,
+          "derechosExplotacion": 334771
+        },
+        {
+          "serial": "04035550",
+          "marca": "Interactive Game Trading",
+          "nuc": "1500879677",
+          "ventasNetas": 3934340,
+          "tarifa12": 472121,
+          "derechosExplotacion": 472121
+        },
+        {
+          "serial": "04037432",
+          "marca": "POKER ONE CON ACEPTA",
+          "nuc": "1500846169",
+          "ventasNetas": 1310750,
+          "tarifa12": 157290,
+          "derechosExplotacion": 157290
+        },
+        {
+          "serial": "04037436",
+          "marca": "POKER ONE CON ACEPTA",
+          "nuc": "1500846178",
+          "ventasNetas": 1178000,
+          "tarifa12": 141360,
+          "derechosExplotacion": 141360
+        },
+        {
+          "serial": "1071703001",
+          "marca": "Atronic Gaming",
+          "nuc": "1000085415",
+          "ventasNetas": 1714270,
+          "tarifa12": 205712,
+          "derechosExplotacion": 205712
+        },
+        {
+          "serial": "1071710002",
+          "marca": "Atronic Gaming",
+          "nuc": "1500846132",
+          "ventasNetas": 3148840,
+          "tarifa12": 377861,
+          "derechosExplotacion": 377861
+        },
+        {
+          "serial": "1071710004",
+          "marca": "ATRONIC",
+          "nuc": "1500846141",
+          "ventasNetas": 1746630,
+          "tarifa12": 209596,
+          "derechosExplotacion": 209596
+        },
+        {
+          "serial": "1071710005",
+          "marca": "ATRONIC",
+          "nuc": "1500846150",
+          "ventasNetas": 1028750,
+          "tarifa12": 123450,
+          "derechosExplotacion": 123450
+        },
+        {
+          "serial": "11036683",
+          "marca": "Atronic Gaming",
+          "nuc": "1002358751",
+          "ventasNetas": 1515130,
+          "tarifa12": 181816,
+          "derechosExplotacion": 181816
+        },
+        {
+          "serial": "128942",
+          "marca": "Novomatic",
+          "nuc": "1501360757",
+          "ventasNetas": 610110,
+          "tarifa12": 73213,
+          "derechosExplotacion": 73213
+        },
+        {
+          "serial": "13-0036-1",
+          "marca": "Gambee",
+          "nuc": "1501360711",
+          "ventasNetas": -171700,
+          "tarifa12": -20604,
+          "derechosExplotacion": -20604
+        },
+        {
+          "serial": "13-0036-2",
+          "marca": "Gambee",
+          "nuc": "1501360720",
+          "ventasNetas": 2511600,
+          "tarifa12": 301392,
+          "derechosExplotacion": 301392
+        },
+        {
+          "serial": "13-0036-3",
+          "marca": "Gambee",
+          "nuc": "1501360739",
+          "ventasNetas": 146500,
+          "tarifa12": 17580,
+          "derechosExplotacion": 17580
+        },
+        {
+          "serial": "13-0036-4",
+          "marca": "Gambee",
+          "nuc": "1501360748",
+          "ventasNetas": 1602000,
+          "tarifa12": 192240,
+          "derechosExplotacion": 192240
+        },
+        {
+          "serial": "13772",
+          "marca": "Gold club",
+          "nuc": "1500364582",
+          "ventasNetas": 381900,
+          "tarifa12": 45828,
+          "derechosExplotacion": 45828
+        },
+        {
+          "serial": "13775",
+          "marca": "Gold club",
+          "nuc": "1500364608",
+          "ventasNetas": 809145,
+          "tarifa12": 97097,
+          "derechosExplotacion": 97097
+        },
+        {
+          "serial": "1809936",
+          "marca": "IGT  ",
+          "nuc": "1001618187",
+          "ventasNetas": 889681,
+          "tarifa12": 106762,
+          "derechosExplotacion": 106762
+        },
+        {
+          "serial": "207657",
+          "marca": "Novomatic",
+          "nuc": "1500537647",
+          "ventasNetas": 1516370,
+          "tarifa12": 181964,
+          "derechosExplotacion": 181964
+        },
+        {
+          "serial": "213937",
+          "marca": "Novomatic",
+          "nuc": "1501360766",
+          "ventasNetas": 1072580,
+          "tarifa12": 128710,
+          "derechosExplotacion": 128710
+        },
+        {
+          "serial": "2390614",
+          "marca": "IGT  ",
+          "nuc": "1500711796",
+          "ventasNetas": 3927460,
+          "tarifa12": 471295,
+          "derechosExplotacion": 471295
+        },
+        {
+          "serial": "2390615",
+          "marca": "IGT  ",
+          "nuc": "1500711787",
+          "ventasNetas": 2033980,
+          "tarifa12": 244078,
+          "derechosExplotacion": 244078
+        },
+        {
+          "serial": "245553",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1000085291",
+          "ventasNetas": 2990380,
+          "tarifa12": 358846,
+          "derechosExplotacion": 358846
+        },
+        {
+          "serial": "245557",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1001714719",
+          "ventasNetas": 1955200,
+          "tarifa12": 234624,
+          "derechosExplotacion": 234624
+        },
+        {
+          "serial": "245559",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1001011080",
+          "ventasNetas": 2230930,
+          "tarifa12": 267712,
+          "derechosExplotacion": 267712
+        },
+        {
+          "serial": "245560",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1000320884",
+          "ventasNetas": 1861300,
+          "tarifa12": 223356,
+          "derechosExplotacion": 223356
+        },
+        {
+          "serial": "280466",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1000349914",
+          "ventasNetas": 583575,
+          "tarifa12": 70029,
+          "derechosExplotacion": 70029
+        },
+        {
+          "serial": "280475",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1001010556",
+          "ventasNetas": -249060,
+          "tarifa12": -29887,
+          "derechosExplotacion": -29887
+        },
+        {
+          "serial": "3000018612",
+          "marca": "SPIELO ATRONIC",
+          "nuc": "1500792620",
+          "ventasNetas": 411275,
+          "tarifa12": 49353,
+          "derechosExplotacion": 49353
+        },
+        {
+          "serial": "402563",
+          "marca": "IGT  ",
+          "nuc": "1002158859",
+          "ventasNetas": 3974700,
+          "tarifa12": 476964,
+          "derechosExplotacion": 476964
+        },
+        {
+          "serial": "449007",
+          "marca": "IGT  ",
+          "nuc": "1001081920",
+          "ventasNetas": 1504500,
+          "tarifa12": 180540,
+          "derechosExplotacion": 180540
+        },
+        {
+          "serial": "469606",
+          "marca": "IGT POKER",
+          "nuc": "1500879659",
+          "ventasNetas": 2786200,
+          "tarifa12": 334344,
+          "derechosExplotacion": 334344
+        },
+        {
+          "serial": "476125",
+          "marca": "IGT  ",
+          "nuc": "1002158868",
+          "ventasNetas": 2579900,
+          "tarifa12": 309588,
+          "derechosExplotacion": 309588
+        },
+        {
+          "serial": "5024158",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500846203",
+          "ventasNetas": 382688,
+          "tarifa12": 45923,
+          "derechosExplotacion": 45923
+        },
+        {
+          "serial": "761877",
+          "marca": "IGT  ",
+          "nuc": "1002158877",
+          "ventasNetas": 1655350,
+          "tarifa12": 198642,
+          "derechosExplotacion": 198642
+        },
+        {
+          "serial": "790258",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1500914966",
+          "ventasNetas": 4463830,
+          "tarifa12": 535660,
+          "derechosExplotacion": 535660
+        },
+        {
+          "serial": "790261",
+          "marca": "AUSTRIAN GAMING INDUSTRIES (NOVOMATIC)",
+          "nuc": "1500914975",
+          "ventasNetas": 482210,
+          "tarifa12": 57865,
+          "derechosExplotacion": 57865
+        },
+        {
+          "serial": "852162",
+          "marca": "IGT  ",
+          "nuc": "1500846221",
+          "ventasNetas": 1458600,
+          "tarifa12": 175032,
+          "derechosExplotacion": 175032
+        },
+        {
+          "serial": "859871",
+          "marca": "Novomatic",
+          "nuc": "1501186171",
+          "ventasNetas": 6532300,
+          "tarifa12": 783876,
+          "derechosExplotacion": 783876
+        },
+        {
+          "serial": "859872",
+          "marca": "Novomatic",
+          "nuc": "1501186162",
+          "ventasNetas": 1631450,
+          "tarifa12": 195774,
+          "derechosExplotacion": 195774
+        },
+        {
+          "serial": "MV004090",
+          "marca": "ARISTOCRAT",
+          "nuc": "1000084810",
+          "ventasNetas": 380490,
+          "tarifa12": 45659,
+          "derechosExplotacion": 45659
+        },
+        {
+          "serial": "MV043448",
+          "marca": "ARISTOCRAT",
+          "nuc": "1000085424",
+          "ventasNetas": 1691890,
+          "tarifa12": 203027,
+          "derechosExplotacion": 203027
+        },
+        {
+          "serial": "MV072743",
+          "marca": "ARISTOCRAT",
+          "nuc": "1500547045",
+          "ventasNetas": 2781940,
+          "tarifa12": 333833,
+          "derechosExplotacion": 333833
+        },
+        {
+          "serial": "W2010841",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1001590166",
+          "ventasNetas": 1213637,
+          "tarifa12": 145636,
+          "derechosExplotacion": 145636
+        },
+        {
+          "serial": "W2045084",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1001172042",
+          "ventasNetas": 1647070,
+          "tarifa12": 197648,
+          "derechosExplotacion": 197648
+        },
+        {
+          "serial": "W2200514",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1001292085",
+          "ventasNetas": -205645,
+          "tarifa12": -24677,
+          "derechosExplotacion": -24677
+        },
+        {
+          "serial": "W2231119",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500612298",
+          "ventasNetas": 798516,
+          "tarifa12": 95822,
+          "derechosExplotacion": 95822
+        },
+        {
+          "serial": "XAR131531",
+          "marca": "Ainsworth",
+          "nuc": "1500631435",
+          "ventasNetas": 551430,
+          "tarifa12": 66172,
+          "derechosExplotacion": 66172
+        },
+        {
+          "serial": "04031484",
+          "marca": "IGT  ",
+          "nuc": "1002158895",
+          "ventasNetas": 2323800,
+          "tarifa12": 278856,
+          "derechosExplotacion": 278856
+        }
+      ]
+    },
+    {
+      "nombreSala": "VAL CASINO MONEY",
+      "municipio": "BOGOTÁ Distrito Capital",
+      "departamento": "BOGOTA",
+      "maquinas": [
+        {
+          "serial": "0039",
+          "marca": "VGI - Video Games Industries",
+          "nuc": "1501098158",
+          "ventasNetas": 269960,
+          "tarifa12": 32395,
+          "derechosExplotacion": 32395
+        },
+        {
+          "serial": "04007204",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1500903785",
+          "ventasNetas": 127870,
+          "tarifa12": 15344,
+          "derechosExplotacion": 15344
+        },
+        {
+          "serial": "07070230",
+          "marca": "Atronic Gaming",
+          "nuc": "1000872098",
+          "ventasNetas": 43330,
+          "tarifa12": 5200,
+          "derechosExplotacion": 5200
+        },
+        {
+          "serial": "1152",
+          "marca": "VGI - Video Games Industries",
+          "nuc": "1501098167",
+          "ventasNetas": 218920,
+          "tarifa12": 26270,
+          "derechosExplotacion": 26270
+        },
+        {
+          "serial": "201800",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1500768697",
+          "ventasNetas": "N/A",
+          "tarifa12": "N/A",
+          "derechosExplotacion": "N/A"
+        },
+        {
+          "serial": "27212",
+          "marca": "Universal Entertaiment",
+          "nuc": "1501098256",
+          "ventasNetas": 132690,
+          "tarifa12": 15923,
+          "derechosExplotacion": 15923
+        },
+        {
+          "serial": "274711",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1000243033",
+          "ventasNetas": -435200,
+          "tarifa12": -52224,
+          "derechosExplotacion": -52224
+        },
+        {
+          "serial": "390041",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1000123689",
+          "ventasNetas": -6150,
+          "tarifa12": -738,
+          "derechosExplotacion": -738
+        },
+        {
+          "serial": "417893",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1000618530",
+          "ventasNetas": 744186,
+          "tarifa12": 89302,
+          "derechosExplotacion": 89302
+        },
+        {
+          "serial": "417900",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1501102853",
+          "ventasNetas": 1983610,
+          "tarifa12": 238033,
+          "derechosExplotacion": 238033
+        },
+        {
+          "serial": "836134",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1002329732",
+          "ventasNetas": 474470,
+          "tarifa12": 56936,
+          "derechosExplotacion": 56936
+        },
+        {
+          "serial": "837535",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1000387245",
+          "ventasNetas": -360560,
+          "tarifa12": -43267,
+          "derechosExplotacion": -43267
+        },
+        {
+          "serial": "857343",
+          "marca": "IGT - International Games Technology",
+          "nuc": "1000123492",
+          "ventasNetas": "N/A",
+          "tarifa12": "N/A",
+          "derechosExplotacion": "N/A"
+        },
+        {
+          "serial": "MV003075",
+          "marca": "Aristocrat",
+          "nuc": "1501098185",
+          "ventasNetas": "N/A",
+          "tarifa12": "N/A",
+          "derechosExplotacion": "N/A"
+        },
+        {
+          "serial": "W1028841",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501098176",
+          "ventasNetas": 278400,
+          "tarifa12": 33408,
+          "derechosExplotacion": 33408
+        },
+        {
+          "serial": "W1098397",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501098238",
+          "ventasNetas": 590600,
+          "tarifa12": 70872,
+          "derechosExplotacion": 70872
+        },
+        {
+          "serial": "W2033758",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1000089851",
+          "ventasNetas": 152950,
+          "tarifa12": 18354,
+          "derechosExplotacion": 18354
+        },
+        {
+          "serial": "W2036628",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1000507130",
+          "ventasNetas": 353710,
+          "tarifa12": 42445,
+          "derechosExplotacion": 42445
+        },
+        {
+          "serial": "W2264772",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501113669",
+          "ventasNetas": 650459,
+          "tarifa12": 78055,
+          "derechosExplotacion": 78055
+        },
+        {
+          "serial": "W2264805",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501113678",
+          "ventasNetas": 5052850,
+          "tarifa12": 606342,
+          "derechosExplotacion": 606342
+        },
+        {
+          "serial": "W2269081",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501113641",
+          "ventasNetas": 230850,
+          "tarifa12": 27702,
+          "derechosExplotacion": 27702
+        },
+        {
+          "serial": "W2289168",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501098194",
+          "ventasNetas": 114020,
+          "tarifa12": 13682,
+          "derechosExplotacion": 13682
+        },
+        {
+          "serial": "W2994081",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1501098247",
+          "ventasNetas": -10050,
+          "tarifa12": -1206,
+          "derechosExplotacion": -1206
+        },
+        {
+          "serial": "w1016463",
+          "marca": "WMS Gaming (Williams Interactive)",
+          "nuc": "1500768704",
+          "ventasNetas": 789032,
+          "tarifa12": 94684,
+          "derechosExplotacion": 94684
+        }
+      ]
+    },
+    {
+      "nombreSala": "CASINO LA GRAN ESTRELLA DOS",
+      "municipio": "BOGOTÁ Distrito Capital",
+      "departamento": "BOGOTA",
+      "maquinas": [
+        {
+          "serial": "010031",
+          "marca": "RECREATIVOS FRANCO (RFRANCO)",
+          "nuc": "1500057546",
+          "ventasNetas": 925277,
+          "tarifa12": 111033,
+          "derechosExplotacion": 111033
+        },
+        {
+          "serial": "XAW314394",
+          "marca": "ARISTOCRAT",
+          "nuc": "1500057644",
+          "ventasNetas": 1342390,
+          "tarifa12": 161087,
+          "derechosExplotacion": 161087
+        },
+        {
+          "serial": "0427",
+          "marca": "SAC",
+          "nuc": "1500057653",
+          "ventasNetas": 689613,
+          "tarifa12": 82754,
+          "derechosExplotacion": 82754
+        },
+        {
+          "serial": "214295",
+          "marca": "IGT  ",
+          "nuc": "1500057626",
+          "ventasNetas": -373800,
+          "tarifa12": -44856,
+          "derechosExplotacion": -44856
+        },
+        {
+          "serial": "218555",
+          "marca": "POKER - POK",
+          "nuc": "1500057671",
+          "ventasNetas": 1149900,
+          "tarifa12": 137988,
+          "derechosExplotacion": 137988
+        },
+        {
+          "serial": "279723",
+          "marca": "POKER - POK",
+          "nuc": "1500057662",
+          "ventasNetas": 1323535,
+          "tarifa12": 158824,
+          "derechosExplotacion": 158824
+        },
+        {
+          "serial": "287314",
+          "marca": "POKER - POK",
+          "nuc": "1500057582",
+          "ventasNetas": 1052600,
+          "tarifa12": 126312,
+          "derechosExplotacion": 126312
+        },
+        {
+          "serial": "43001951",
+          "marca": "ATRONIC",
+          "nuc": "1500057591",
+          "ventasNetas": 642270,
+          "tarifa12": 77072,
+          "derechosExplotacion": 77072
+        },
+        {
+          "serial": "E2090128",
+          "marca": "BALLY",
+          "nuc": "1500057573",
+          "ventasNetas": 723090,
+          "tarifa12": 86771,
+          "derechosExplotacion": 86771
+        },
+        {
+          "serial": "S980303182",
+          "marca": "BALLY",
+          "nuc": "1500057680",
+          "ventasNetas": 2599880,
+          "tarifa12": 311986,
+          "derechosExplotacion": 311986
+        },
+        {
+          "serial": "W1012496",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057617",
+          "ventasNetas": 799380,
+          "tarifa12": 95926,
+          "derechosExplotacion": 95926
+        },
+        {
+          "serial": "W1012497",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057555",
+          "ventasNetas": 3190230,
+          "tarifa12": 382828,
+          "derechosExplotacion": 382828
+        },
+        {
+          "serial": "W1036072",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057699",
+          "ventasNetas": 307633,
+          "tarifa12": 36916,
+          "derechosExplotacion": 36916
+        },
+        {
+          "serial": "W1065414",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057528",
+          "ventasNetas": 21630,
+          "tarifa12": 2596,
+          "derechosExplotacion": 2596
+        },
+        {
+          "serial": "W1069747",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057635",
+          "ventasNetas": 2147300,
+          "tarifa12": 257676,
+          "derechosExplotacion": 257676
+        },
+        {
+          "serial": "W2072842",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057564",
+          "ventasNetas": 2580060,
+          "tarifa12": 309607,
+          "derechosExplotacion": 309607
+        },
+        {
+          "serial": "W2133874",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057608",
+          "ventasNetas": 174298,
+          "tarifa12": 20916,
+          "derechosExplotacion": 20916
+        },
+        {
+          "serial": "W2133912",
+          "marca": "WILLIAMS (WMS)",
+          "nuc": "1500057537",
+          "ventasNetas": 86479,
+          "tarifa12": 10377,
+          "derechosExplotacion": 10377
+        },
+        {
+          "serial": "XAW302447",
+          "marca": "ARISTOCRAT",
+          "nuc": "1500057500",
+          "ventasNetas": 116640,
+          "tarifa12": 13997,
+          "derechosExplotacion": 13997
+        },
+        {
+          "serial": "0228216",
+          "marca": "IGT  ",
+          "nuc": "1500585778",
+          "ventasNetas": 599066,
+          "tarifa12": 71888,
+          "derechosExplotacion": 71888
+        }
+      ]
+    }
+  ],
+  "outputZipPath": "C:\\Users\\EDW\\OneDrive\\Codigo OK Github\\Proyecto_Casinos2\\output\\Informes_salas.zip"
+}

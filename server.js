@@ -10,16 +10,20 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(fileUpload({ parseNested: true }));
-app.use(express.static('public'));
-
+// Middlewares
+app.use(fileUpload({ parseNested: true })); // Middleware para manejo de archivos
+app.use(express.static('public')); // Servir archivos estáticos
+app.use(express.json()); // Middleware para procesar JSON
+app.use(express.urlencoded({ extended: true })); // Middleware para datos codificados en URL
 
 // Configuración de rutas
 const inventarioRoutes = require('./routes/inventarioRoutes');
 const facturacionRoutes = require('./routes/facturacionRoutes');
+const pdfRoutes = require('./routes/pdfRoutes'); // Nueva ruta
 
 app.use('/inventario', inventarioRoutes);
 app.use('/facturacion', facturacionRoutes);
+app.use('/api/pdf', pdfRoutes);
 
 // WebSocket para monitoreo
 io.on('connection', (socket) => {
