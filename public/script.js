@@ -150,44 +150,100 @@ function askForPDFGeneration() {
   }
 }
 function generatePDFs() {
-  fetch('http://localhost:3000/api/pdf/generarInformesZIP', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      salas: [ /* Aquí los datos de las salas */ ],
-    }),
-  })
-    .then(response => {
+  try {
+    // Obtener la información de la empresa del sessionStorage
+    const empresaSeleccionada = sessionStorage.getItem('empresaSeleccionada');
+    console.log('Datos en sessionStorage:', empresaSeleccionada);
+    
+    if (!empresaSeleccionada) {
+      showStatusMessage('No se encontró la información de la empresa en sessionStorage. Por favor, selecciona una empresa primero.', 'error');
+      return;
+    }
+
+    const empresaData = JSON.parse(empresaSeleccionada);
+    console.log('Datos de empresa parseados:', empresaData);
+    
+    if (!empresaData || !empresaData.nombre || !empresaData.nit || !empresaData.contrato) {
+      showStatusMessage('La información de la empresa está incompleta. Asegúrate de seleccionar una empresa válida.', 'error');
+      return;
+    }
+
+    // Transformar la estructura de datos para que coincida con lo esperado en el backend
+    const empresaInfo = {
+      nombre: empresaData.nombre,
+      nit: empresaData.nit,
+      contrato: empresaData.contrato
+    };
+
+    console.log('Enviando datos al servidor:', empresaInfo);
+
+    // Mostrar mensaje de progreso
+    showStatusMessage('Generando PDFs, por favor espere...', 'info');
+    
+    // Deshabilitar botones durante la generación
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = true);
+
+    fetch('/api/pdf/generarInformesZIP', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        empresaInfo: empresaInfo
+      })
+    })
+    .then(async response => {
       if (!response.ok) {
-        throw new Error('Error al generar los PDFs');
+        const errorText = await response.text();
+        throw new Error(`Error del servidor: ${errorText}`);
       }
       return response.blob();
     })
     .then(blob => {
+      // Habilitar botones
+      buttons.forEach(button => button.disabled = false);
+      
+      // Crear URL del blob y descargar
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.style.display = 'none';
       a.href = url;
-      a.download = 'Informes_salas.zip';
+      a.download = `Informes_${empresaInfo.nombre.replace(/\s+/g, '_')}_${empresaInfo.contrato}.zip`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+
       showStatusMessage('✅ PDFs generados y descargados con éxito.', 'success');
     })
     .catch(error => {
-      console.error('Error al generar los PDFs:', error);
-      showStatusMessage('Hubo un error al generar los PDFs. Intenta nuevamente.', 'error');
+      console.error('Error al generar PDFs:', error);
+      buttons.forEach(button => button.disabled = false);
+      showStatusMessage(`Error al generar PDFs: ${error.message}`, 'error');
     });
+  } catch (error) {
+    console.error('Error en generatePDFs:', error);
+    showStatusMessage(`Error inesperado: ${error.message}`, 'error');
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => button.disabled = false);
+  }
 }
 
-// Función para mostrar mensajes de estado (exitoso o de error)
-function showStatusMessage(message, type = 'error') {
-  const statusMessage = document.getElementById('statusMessage');
-  statusMessage.textContent = message;
-  statusMessage.style.color = type === 'success' ? 'green' : 'red';
+// Función mejorada para mostrar mensajes de estado
+function showStatusMessage(message, type = 'info') {
+  const statusDiv = document.getElementById('statusMessage') || createStatusMessageDiv();
+  statusDiv.textContent = message;
+  statusDiv.className = `status-message ${type}`;
+  statusDiv.style.display = 'block';
+}
+
+// Crear div para mensajes si no existe
+function createStatusMessageDiv() {
+  const div = document.createElement('div');
+  div.id = 'statusMessage';
+  div.className = 'status-message';
+  document.body.appendChild(div);
+  return div;
 }
 
 // Función para reiniciar el formulario

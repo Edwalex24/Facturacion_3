@@ -130,10 +130,17 @@
     <script>
         // Función para obtener el nombre del mes anterior
         function obtenerMesAnterior() {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const fecha = new Date();
-            fecha.setMonth(fecha.getMonth() - 1);
-            return meses[fecha.getMonth()];
+            try {
+                const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                const fecha = new Date();
+                const mesAnterior = fecha.getMonth() - 1;
+                // Manejar el caso de enero (donde mes anterior sería diciembre del año anterior)
+                const indiceMes = mesAnterior < 0 ? 11 : mesAnterior;
+                return meses[indiceMes];
+            } catch (error) {
+                console.error('Error al obtener mes anterior:', error);
+                return 'mes anterior';
+            }
         }
 
         // Función para volver a la página de selección
@@ -143,27 +150,49 @@
 
         // Cargar la información de la empresa al iniciar la página
         window.addEventListener('DOMContentLoaded', function() {
-            const empresaData = JSON.parse(sessionStorage.getItem('empresaSeleccionada'));
-            
-            if (!empresaData) {
+            try {
+                const empresaData = JSON.parse(sessionStorage.getItem('empresaSeleccionada'));
+                
+                if (!empresaData) {
+                    window.location.href = 'seleccion-empresa.html';
+                    return;
+                }
+
+                // Mostrar la información de la empresa
+                document.getElementById('nombre-empresa').textContent = empresaData.nombre || '-';
+                document.getElementById('nit-empresa').textContent = empresaData.nit || '-';
+                document.getElementById('contrato-seleccionado').textContent = empresaData.contrato || '-';
+                document.getElementById('periodo-facturacion').textContent = obtenerMesAnterior() + ' ' + new Date().getFullYear();
+
+                // Solo verificar facturación si tenemos un contrato válido
+                if (empresaData.contrato) {
+                    verificarFacturacionPrevia(empresaData.contrato);
+                }
+            } catch (error) {
+                console.error('Error al cargar datos de empresa:', error);
                 window.location.href = 'seleccion-empresa.html';
-                return;
             }
-
-            // Mostrar la información de la empresa
-            document.getElementById('nombre-empresa').textContent = empresaData.empresa;
-            document.getElementById('nit-empresa').textContent = empresaData.nit;
-            document.getElementById('contrato-seleccionado').textContent = empresaData.contratos[0];
-            document.getElementById('periodo-facturacion').textContent = obtenerMesAnterior() + ' ' + new Date().getFullYear();
-
-            // Verificar si ya se ha facturado este contrato en este período
-            verificarFacturacionPrevia(empresaData.contratos[0]);
         });
 
         // Función para verificar si ya se ha facturado este contrato en este período
         async function verificarFacturacionPrevia(contrato) {
+            if (!contrato) {
+                console.error('No se proporcionó un contrato válido');
+                return;
+            }
+
             try {
-                const response = await fetch(`/api/verificar-facturacion?contrato=${contrato}&periodo=${obtenerMesAnterior()}`);
+                const mesAnterior = obtenerMesAnterior();
+                if (!mesAnterior) {
+                    throw new Error('No se pudo obtener el mes anterior');
+                }
+
+                const response = await fetch(`/api/verificar-facturacion?contrato=${encodeURIComponent(contrato)}&periodo=${encodeURIComponent(mesAnterior)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error en la respuesta: ${response.status}`);
+                }
+
                 const data = await response.json();
                 
                 if (data.yaFacturado) {
@@ -178,6 +207,7 @@
                 }
             } catch (error) {
                 console.error('Error al verificar facturación previa:', error);
+                // No bloquear la interfaz en caso de error de verificación
             }
         }
     </script>

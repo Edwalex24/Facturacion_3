@@ -2,6 +2,7 @@ const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
+const { empresasData } = require('../public/js/empresas');
 
 /**
  * Calcula el tamaño de fuente necesario para que el texto quepa en un ancho máximo
@@ -144,14 +145,135 @@ function drawRoundedRect(page, x, y, width, height, options) {
   }
 }
 
-async function generarPDFPorSala(sala) {
+/**
+ * Carga y redimensiona el logo de una empresa
+ * @param {PDFDocument} pdfDoc - Documento PDF
+ * @param {string} empresaNombre - Nombre de la empresa
+ * @returns {Promise<{image: PDFImage, dimensions: {width: number, height: number}} | null>}
+ */
+async function cargarLogo(pdfDoc, empresaNombre) {
   try {
-    // Validación de datos
-    if (!sala || !sala.establecimiento || !sala.maquinas || sala.maquinas.length === 0) {
-      throw new Error(`Datos inválidos para la sala: ${JSON.stringify(sala)}`);
+    // Validación inicial del nombre de la empresa
+    if (!empresaNombre || typeof empresaNombre !== 'string') {
+      console.log(`[PDF] Nombre de empresa inválido: ${empresaNombre}`);
+      return {
+        isTextLogo: true,
+        text: empresaNombre || 'Empresa',
+        color: rgb(0.2, 0.4, 0.6)
+      };
     }
 
-    console.log(`Generando PDF para la sala: ${sala.establecimiento}`);
+    // Buscar la empresa en empresasData
+    const empresa = empresasData.empresas.find(e => e.nombre === empresaNombre);
+    if (!empresa) {
+      console.log(`[PDF] No se encontró la empresa: ${empresaNombre}`);
+      return {
+        isTextLogo: true,
+        text: empresaNombre,
+        color: rgb(0.2, 0.4, 0.6)
+      };
+    }
+
+    console.log(`[PDF] Procesando logo para empresa: ${empresaNombre}`);
+    console.log(`[PDF] Logo definido: ${empresa.logo}`);
+
+    // Solo intentar cargar el logo si la empresa tiene la propiedad logo definida
+    if (empresa.logo) {
+      try {
+        const logoPath = path.join(__dirname, '../public/logos', empresa.logo);
+        console.log(`[PDF] Intentando cargar logo desde: ${logoPath}`);
+        
+        if (fs.existsSync(logoPath)) {
+          console.log(`[PDF] Archivo de logo encontrado`);
+          const logoBytes = fs.readFileSync(logoPath);
+          console.log(`[PDF] Logo leído correctamente, tamaño: ${logoBytes.length} bytes`);
+          
+          const logoImage = await pdfDoc.embedPng(logoBytes);
+          console.log(`[PDF] Logo embebido en PDF, dimensiones originales: ${logoImage.width}x${logoImage.height}`);
+          
+          // Calcular dimensiones manteniendo la proporción
+          const maxWidth = 200; // Ancho máximo del logo
+          const maxHeight = 100; // Alto máximo del logo
+          
+          let width = logoImage.width;
+          let height = logoImage.height;
+          
+          // Ajustar dimensiones si exceden los límites
+          if (width > maxWidth) {
+            const ratio = maxWidth / width;
+            width = maxWidth;
+            height = height * ratio;
+          }
+          
+          if (height > maxHeight) {
+            const ratio = maxHeight / height;
+            height = maxHeight;
+            width = width * ratio;
+          }
+          
+          console.log(`[PDF] Dimensiones finales del logo: ${width}x${height}`);
+          
+          return {
+            isTextLogo: false,
+            image: logoImage,
+            dimensions: { width, height }
+          };
+        } else {
+          console.log(`[PDF] Archivo de logo no encontrado en: ${logoPath}`);
+        }
+      } catch (error) {
+        console.error(`[PDF ERROR] Error cargando logo de ${empresaNombre}:`, error);
+      }
+    } else {
+      console.log(`[PDF] La empresa ${empresaNombre} no tiene logo definido`);
+    }
+
+    // Si no hay logo definido o hubo error al cargarlo, usar el nombre como logo
+    console.log(`[PDF] Usando nombre de empresa como logo para: ${empresaNombre}`);
+    return {
+      isTextLogo: true,
+      text: empresaNombre,
+      color: rgb(0.2, 0.4, 0.6)
+    };
+
+  } catch (error) {
+    console.error(`[PDF ERROR] Error cargando logo: ${error.message}`);
+    return {
+      isTextLogo: true,
+      text: empresaNombre || 'Empresa',
+      color: rgb(0.2, 0.4, 0.6)
+    };
+  }
+}
+
+async function generarPDFPorSala(sala, empresaInfo) {
+  try {
+    // Validación mejorada de datos
+    if (!sala) {
+      throw new Error('No se proporcionaron datos de la sala');
+    }
+
+    if (!sala.establecimiento) {
+      throw new Error('La sala no tiene nombre de establecimiento');
+    }
+
+    if (!Array.isArray(sala.maquinas) || sala.maquinas.length === 0) {
+      throw new Error(`La sala ${sala.establecimiento} no tiene máquinas registradas`);
+    }
+
+    if (!empresaInfo) {
+      throw new Error('No se proporcionó información de la empresa');
+    }
+
+    const requiredEmpresaFields = ['nombre', 'nit', 'contrato'];
+    const missingFields = requiredEmpresaFields.filter(field => !empresaInfo[field]);
+    if (missingFields.length > 0) {
+      throw new Error(`Faltan campos requeridos en la información de empresa: ${missingFields.join(', ')}`);
+    }
+
+    console.log(`[PDF] Iniciando generación para sala: ${sala.establecimiento}`);
+    console.log(`[PDF] Empresa: ${empresaInfo.nombre}, Contrato: ${empresaInfo.contrato}`);
+    console.log(`[PDF] Total máquinas a procesar: ${sala.maquinas.length}`);
 
     // Crear documento PDF
     const pdfDoc = await PDFDocument.create();
@@ -159,11 +281,14 @@ async function generarPDFPorSala(sala) {
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
+    // Cargar el logo
+    const logo = await cargarLogo(pdfDoc, empresaInfo.nombre);
+
     // ========= CONFIGURACIÓN DE DISEÑO =========
     const pageWidth = 612;
     const pageHeight = 792;
     const rowHeight = 28; // Altura adecuada para las filas
-    const headerHeight = 90; // Encabezado más alto para acomodar los dos títulos
+    const headerHeight = 120; // Aumentado para acomodar la información de la empresa
     const margin = 40; // Margen general para la página
     const totalsHeight = 140; // Altura del área de totales
     const footerHeight = 50; // Altura reservada para el pie de página
@@ -201,138 +326,185 @@ async function generarPDFPorSala(sala) {
     });
 
     // Cálculo de totales
-    const totalVentasNetas = Math.round(sala.maquinas.reduce((sum, m) => sum + m.ventasNetas, 0));
+    const totalVentasNetas = Math.round(sala.maquinas.reduce((sum, m) => {
+      // Asegurarse de que ventasNetas sea un número, si es null, undefined o NaN, usar 0
+      const ventasNetas = Number(m.ventasNetas);
+      return sum + (isNaN(ventasNetas) ? 0 : ventasNetas);
+    }, 0));
     const impuesto12 = Math.round(totalVentasNetas * 0.12);
     const gastosAdministrativos = Math.round(impuesto12 * 0.01);
     const totalAPagar = Math.round(impuesto12 + gastosAdministrativos);
 
     // ========= FUNCIONES AUXILIARES =========
     const drawHeader = (isFirstPage = false) => {
+      const page = pdfDoc.getPage(pdfDoc.getPageCount() - 1);
+      
       if (isFirstPage) {
-        // Fondo de encabezado con gradiente simulado
-        currentPage.drawRectangle({
-          x: 0, 
-          y: pageHeight - headerHeight,
-          width: pageWidth, 
-          height: headerHeight,
+        // Configuración de márgenes y espaciado
+        const startY = pageHeight - margin;
+        const lineHeight = 20;
+        let currentY = startY;
+
+        // Calcular el ancho disponible para el texto
+        const textAreaWidth = pageWidth - (2 * margin);
+        const logoWidth = logo ? (logo.isTextLogo ? 500 : logo.dimensions.width) : 0;
+        const textWidth = textAreaWidth - logoWidth - 20;
+
+        // Dibujar el logo o texto alternativo
+        if (logo) {
+          if (logo.isTextLogo) {
+            // Dibujar nombre de empresa como logo
+            const fontSize = 24;
+            const font = fontBold;
+            const text = logo.text.toUpperCase();
+            const textWidth = font.widthOfTextAtSize(text, fontSize);
+            
+            // Dibujar un rectángulo de fondo
+            page.drawRectangle({
+              x: margin,
+              y: currentY - 5,
+              width: textWidth + 120,
+              height: 60,
+              color: rgb(0.95, 0.95, 0.95),
+              borderColor: logo.color,
+              borderWidth: 2,
+              opacity: 1
+            });
+
+            // Dibujar el texto
+            page.drawText(text, {
+              x: margin + 30,
+              y: currentY + 5,
+              size: fontSize,
+              font: font,
+              color: logo.color
+            });
+          } else {
+            // Dibujar imagen de logo normal
+            page.drawImage(logo.image, {
+              x: margin,
+              y: currentY - logo.dimensions.height - 5,
+              width: logo.dimensions.width * 1.5,
+              height: logo.dimensions.height,
+            });
+          }
+        }
+
+        // Ajustar la posición Y inicial según si hay logo o no
+        currentY = startY - (logo ? (logo.isTextLogo ? 70 : logo.dimensions.height + 10) : 20);
+        
+        // Contenedor para la información
+        const infoBoxHeight = 120;
+        const infoBoxY = currentY - infoBoxHeight;
+        
+        // Dibujar fondo para la información
+        page.drawRectangle({
+          x: margin,
+          y: infoBoxY,
+          width: textAreaWidth,
+          height: infoBoxHeight,
+          color: rgb(0.98, 0.98, 0.98),
+          borderColor: rgb(0.8, 0.8, 0.8),
+          borderWidth: 1
+        });
+
+        // Sección de Datos de la Empresa (izquierda)
+        const leftX = margin + 20;
+        let leftY = currentY - 20;
+
+        drawTextWithShadow(page, 'DATOS DE LA EMPRESA', leftX, leftY, {
+          size: 12,
+          font: fontBold,
           color: primaryColor
         });
-        
-        // Línea decorativa inferior
-        currentPage.drawRectangle({
-          x: 0, 
-          y: pageHeight - headerHeight - 3,
-          width: pageWidth, 
-          height: 3,
-          color: accentColor
-        });
-        
-        // Título principal con sombra
-        const title = `Informe de Ventas`;
-        
-        drawTextWithShadow(currentPage, title, (pageWidth - fontBold.widthOfTextAtSize(title, 18)) / 2, 
-                           pageHeight - 55, {
-          size: 18,
+        leftY -= lineHeight;
+
+        drawText(page, empresaInfo.nombre, leftX, leftY, {
+          size: 11,
           font: fontBold,
-          color: rgb(1, 1, 1)
+          color: textColor
         });
-        
-        // Subtítulo con el nombre de la sala
-        const subtitle = `Sala: ${sala.establecimiento}`;
-        drawCenteredText(currentPage, subtitle, pageHeight - headerHeight + 10, 14, fontBold, rgb(1, 1, 1), pageWidth);
-        
-        // Fecha de emisión - alineada a la derecha
-        const today = new Date();
-        const dateStr = `Fecha: ${today.toLocaleDateString('es-CO')}`;
-        currentPage.drawText(dateStr, {
-          x: pageWidth - margin - fontItalic.widthOfTextAtSize(dateStr, 11),
-          y: pageHeight - headerHeight + 10,
+        leftY -= lineHeight;
+
+        drawText(page, `NIT: ${empresaInfo.nit}`, leftX, leftY, {
           size: 11,
           font: font,
-          color: rgb(1, 1, 1)
+          color: textColor
         });
-      }
-    };
+        leftY -= lineHeight;
 
-    const drawSalaInfo = () => {
-      let y = pageHeight - headerHeight - 20;
-      
-      // Contenedor para información de la sala - alineado con la tabla
-      currentPage.drawRectangle({
-        x: leftMargin,
-        y: y - 65,
-        width: tableTotalWidth,
-        height: 75,
-        color: secondaryColor,
-        borderColor: rgb(0.7, 0.7, 0.7),
-        borderWidth: 0.5,
-        opacity: 0.8
-      });
-      
-      // Información de la sala con mejor espaciado
-      const labelX = leftMargin + 15; // Padding izquierdo para las etiquetas
-      const valueX = labelX + 110; // Posición fija para los valores
-      
-      // Establecimiento
-      currentPage.drawText(`Establecimiento:`, {
-        x: labelX,
-        y: y,
-        size: 12,
-        font: fontBold,
-        color: primaryColor
-      });
-      
-      currentPage.drawText(`${sala.establecimiento}`, {
-        x: valueX,
-        y: y,
-        size: 12,
-        font: font,
-        color: textColor
-      });
-      
-      y -= 20; // Más espacio entre líneas
-      
-      // Municipio
-      if (sala.municipio) {
-        currentPage.drawText(`Municipio:`, {
-          x: labelX,
-          y: y,
+        drawText(page, `Contrato: ${empresaInfo.contrato}`, leftX, leftY, {
+          size: 11,
+          font: font,
+          color: textColor
+        });
+        leftY -= lineHeight;
+
+        const periodo = obtenerPeriodoFacturacion();
+        drawText(page, `Período: ${periodo}`, leftX, leftY, {
+          size: 11,
+          font: font,
+          color: textColor
+        });
+
+        // Sección de Datos de la Sala (derecha)
+        const rightX = margin + (textAreaWidth / 2) + 20;
+        let rightY = currentY - 20;
+
+        drawTextWithShadow(page, 'DATOS DE LA SALA', rightX, rightY, {
           size: 12,
           font: fontBold,
           color: primaryColor
         });
-        
-        currentPage.drawText(`${sala.municipio}`, {
-          x: valueX,
-          y: y,
-          size: 12,
+        rightY -= lineHeight;
+
+        drawText(page, `Establecimiento: ${sala.establecimiento}`, rightX, rightY, {
+          size: 11,
           font: font,
           color: textColor
         });
-        y -= 20;
-      }
-      
-      // Departamento
-      if (sala.departamento) {
-        currentPage.drawText(`Departamento:`, {
-          x: labelX,
-          y: y,
-          size: 12,
-          font: fontBold,
-          color: primaryColor
+        rightY -= lineHeight;
+
+        if (sala.municipio) {
+          drawText(page, `Municipio: ${sala.municipio}`, rightX, rightY, {
+            size: 11,
+            font: font,
+            color: textColor
+          });
+          rightY -= lineHeight;
+        }
+
+        if (sala.departamento) {
+          drawText(page, `Departamento: ${sala.departamento}`, rightX, rightY, {
+            size: 11,
+            font: font,
+            color: textColor
+          });
+        }
+
+        // Línea separadora final
+        currentY = infoBoxY - lineHeight;
+        page.drawLine({
+          start: { x: margin, y: currentY },
+          end: { x: pageWidth - margin, y: currentY },
+          thickness: 1,
+          color: rgb(0.8, 0.8, 0.8)
         });
-        
-        currentPage.drawText(`${sala.departamento}`, {
-          x: valueX,
-          y: y,
-          size: 12,
-          font: font,
-          color: textColor
+
+        // Devolver la posición Y final del encabezado
+        return currentY - 40;
+
+      } else {
+        // Para páginas adicionales, mostrar un encabezado más pequeño
+        const nombreSala = `Sala: ${sala.establecimiento}`;
+        const titleWidth = font.widthOfTextAtSize(nombreSala, 9);
+        drawText(page, nombreSala, pageWidth - margin - titleWidth, pageHeight - margin, {
+          size: 9,
+          font: fontItalic,
+          color: rgb(0.5, 0.5, 0.5)
         });
+        return pageHeight - margin - 40; // Posición Y para páginas adicionales
       }
-      
-      // Devolvemos la nueva posición Y para controlar dónde iniciar la tabla
-      return y - 45; // Ajustado el espacio entre el cuadro de info y la tabla
     };
 
     const drawTableHeaders = () => {
@@ -499,18 +671,15 @@ async function generarPDFPorSala(sala) {
     const totalItems = sala.maquinas.length;
     const totalPages = Math.ceil(totalItems / maxRowsOtherPages) || 1;
     
-    // 1. Encabezado
-    drawHeader(true);
+    // 1. Encabezado y obtener la posición Y para la tabla
+    cursorY = drawHeader(true);
     
-    // 2. Información de la sala y obtenemos la nueva posición Y
-    cursorY = drawSalaInfo();
-    
-    // 3. Tabla - usando la posición Y actualizada
+    // 2. Tabla - usando la posición Y devuelta por drawHeader
     drawTableHeaders();
     
     let lastRowY = cursorY; // Guardamos la posición Y de la última fila
 
-    // 4. Filas de máquinas con diseño mejorado
+    // 3. Filas de máquinas con diseño mejorado
     let currentRowInPage = 0;
     
     sala.maquinas.forEach((maquina, index) => {
@@ -532,7 +701,7 @@ async function generarPDFPorSala(sala) {
         maquina.serial || 'N/A',
         maquina.nuc || 'N/A',
         maquina.marca || 'N/A',
-        formatterCOP.format(Math.round(maquina.ventasNetas || 0))
+        formatterCOP.format(Number(maquina.ventasNetas) || 0)
       ];
       
       values.forEach((value, i) => {
@@ -563,22 +732,12 @@ async function generarPDFPorSala(sala) {
       });
       
       cursorY -= rowHeight;
-
-      // Si es la última máquina, verificar si hay espacio para los totales
-      if (index === sala.maquinas.length - 1) {
-        if (cursorY < (footerSpace + totalsHeight)) {
-          drawFooter(pageCount, totalPages);
-          pageCount++;
-          currentPage = pdfDoc.addPage([pageWidth, pageHeight]);
-          cursorY = pageHeight - 30;
-        }
-      }
     });
 
-    // Dibujar totales
+    // 4. Dibujar totales al final
     drawTotals();
     
-    // Dibujar el pie de página en la última página
+    // 5. Dibujar el pie de página en la última página
     drawFooter(pageCount, totalPages);
     
     // Firma/Sello
@@ -596,8 +755,38 @@ async function generarPDFPorSala(sala) {
     return Buffer.from(pdfBytes);
 
   } catch (error) {
-    console.error(`Error generando PDF: ${error.message}`);
-    throw error;
+    console.error(`[PDF ERROR] Error generando PDF para sala ${sala?.establecimiento || 'desconocida'}:`);
+    console.error(`[PDF ERROR] Detalles: ${error.message}`);
+    console.error(`[PDF ERROR] Stack: ${error.stack}`);
+    throw new Error(`Error generando PDF: ${error.message}`);
+  }
+}
+
+/**
+ * Sanitiza un string para usarlo como nombre de archivo
+ * @param {string} str - String a sanitizar
+ * @returns {string} - String sanitizado
+ */
+function sanitizeFileName(str) {
+  try {
+    if (!str || typeof str !== 'string') {
+      console.warn(`sanitizeFileName: valor inválido recibido: ${typeof str}`);
+      return 'sin_nombre';
+    }
+
+    return str.toString()
+      .normalize('NFD') // Normalizar caracteres Unicode
+      .replace(/[\u0300-\u036f]/g, '') // Remover acentos
+      .replace(/\s+/g, '_') // Espacios a guiones bajos
+      .replace(/[^a-zA-Z0-9_-]/g, '') // Solo permitir letras, números y algunos símbolos
+      .replace(/_+/g, '_') // Evitar guiones bajos múltiples
+      .replace(/^_+|_+$/g, '') // Remover guiones bajos al inicio y final
+      .trim()
+      .toLowerCase() // Convertir a minúsculas
+      || 'sin_nombre'; // Si después de todo queda vacío, usar valor por defecto
+  } catch (error) {
+    console.error('Error en sanitizeFileName:', error);
+    return 'sin_nombre';
   }
 }
 
@@ -605,8 +794,30 @@ async function generarPDFPorSala(sala) {
  * Genera PDFs para todas las salas y las comprime en un archivo ZIP.
  * @param {Array} salas - Lista de salas.
  * @param {String} outputZipPath - Ruta donde se guardará el archivo ZIP.
+ * @param {Object} empresaInfo - Información de la empresa.
  */
-async function generarPDFsYSalaZIP(salas, outputZipPath) {
+async function generarPDFsYSalaZIP(salas, outputZipPath, empresaInfo) {
+  console.log('Iniciando generación de PDFs con empresaInfo:', JSON.stringify(empresaInfo, null, 2));
+
+  // Validación mejorada de empresaInfo
+  if (!empresaInfo || typeof empresaInfo !== 'object') {
+    throw new Error('No se proporcionó la información de la empresa o el formato es inválido');
+  }
+
+  const camposRequeridos = ['nombre', 'nit', 'contrato'];
+  const camposFaltantes = camposRequeridos.filter(campo => !empresaInfo[campo]);
+  
+  if (camposFaltantes.length > 0) {
+    throw new Error(`Faltan campos requeridos en la información de empresa: ${camposFaltantes.join(', ')}`);
+  }
+
+  // Validar que el directorio de salida existe
+  const outputDir = path.dirname(outputZipPath);
+  if (!fs.existsSync(outputDir)) {
+    console.log(`Creando directorio de salida: ${outputDir}`);
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
   const zip = archiver('zip', { zlib: { level: 9 } }); // Nivel de compresión alto
   const output = fs.createWriteStream(outputZipPath);
 
@@ -623,24 +834,43 @@ async function generarPDFsYSalaZIP(salas, outputZipPath) {
 
     zip.pipe(output);
 
+    // Validar que hay salas para procesar
+    if (!Array.isArray(salas) || salas.length === 0) {
+      throw new Error('No hay salas para procesar');
+    }
+
+    console.log(`Procesando ${salas.length} salas...`);
+
     // Procesar cada sala
     for (const sala of salas) {
       try {
+        if (!sala || !sala.establecimiento) {
+          console.error('Sala inválida o sin nombre de establecimiento');
+          continue;
+        }
+
         console.log(`Generando PDF para la sala: ${sala.establecimiento}`);
         
-        // Generar el PDF
-        const pdfBuffer = await generarPDFPorSala(sala);
+        // Generar el PDF pasando la información de la empresa
+        const pdfBuffer = await generarPDFPorSala(sala, empresaInfo);
 
         // Validar que el PDF es un Buffer válido
         if (!Buffer.isBuffer(pdfBuffer)) {
           console.error(`El PDF generado para la sala ${sala.establecimiento} no es un Buffer válido.`);
-          continue; // Saltar a la siguiente sala
+          continue;
         }
 
         console.log(`Añadiendo PDF de ${sala.establecimiento} al ZIP...`);
-        zip.append(pdfBuffer, { name: `${sala.establecimiento.replace(/ /g, '_')}.pdf` });
+        
+        // Sanitizar nombres para el archivo PDF
+        const empresaNombre = sanitizeFileName(empresaInfo.nombre || 'empresa');
+        const establecimientoNombre = sanitizeFileName(sala.establecimiento || 'sala');
+        const pdfName = `${empresaNombre}_${establecimientoNombre}.pdf`;
+        
+        zip.append(pdfBuffer, { name: pdfName });
       } catch (error) {
-        console.error(`Error generando el PDF para la sala "${sala.establecimiento}": ${error.message}`);
+        console.error(`Error generando el PDF para la sala "${sala?.establecimiento || 'desconocida'}": ${error.message}`);
+        console.error('Stack:', error.stack);
         continue; // Saltar a la siguiente sala
       }
     }
@@ -652,6 +882,25 @@ async function generarPDFsYSalaZIP(salas, outputZipPath) {
       console.error('Error al finalizar el archivo ZIP:', err);
       reject(err);
     }
+  });
+}
+
+// Función para obtener el período de facturación
+function obtenerPeriodoFacturacion() {
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  const fecha = new Date();
+  fecha.setMonth(fecha.getMonth() - 1);
+  return `${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
+}
+
+// Función auxiliar para dibujar texto
+function drawText(page, text, x, y, options) {
+  page.drawText(text, {
+    x,
+    y,
+    size: options.size,
+    font: options.font,
+    color: options.color
   });
 }
 
